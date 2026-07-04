@@ -52,16 +52,6 @@ export function useCart() {
     setCartCount(count);
   }, [query.data, isAuthenticated, setCartCount]);
 
-  // TEMP DEBUG
-  if (typeof window !== 'undefined') {
-    console.log('[useCart]', new Date().toISOString().slice(11,23), {
-      status: query.status,
-      fetchStatus: query.fetchStatus,
-      isAuthenticated,
-      dataItems: query.data?.items?.length ?? 'none',
-    });
-  }
-
   return query;
 }
 
@@ -72,12 +62,13 @@ export function useAddToCart() {
       const res = await apiClient.post<ApiResponse<Cart>>('/cart/items', payload);
       return res.data.data ?? null;
     },
-    // The add-item endpoint returns the full updated cart. Write it straight
-    // into the cache so navigating to /cart shows items immediately, with no
-    // refetch race that would otherwise flash an empty cart on first mount.
-    onSuccess: (cart) => {
-      if (cart) queryClient.setQueryData(CART_KEY, cart);
-      queryClient.invalidateQueries({ queryKey: CART_KEY });
+    // Force an immediate refetch of the GET /cart endpoint, which returns the
+    // cart with fully-populated product objects. We deliberately do NOT
+    // setQueryData with the POST response here: the add-item response may
+    // return items whose `product` is an unpopulated ObjectId, which would
+    // overwrite the good cache with unrenderable items until a manual refresh.
+    onSuccess: () => {
+      queryClient.refetchQueries({ queryKey: CART_KEY });
     },
   });
 }
