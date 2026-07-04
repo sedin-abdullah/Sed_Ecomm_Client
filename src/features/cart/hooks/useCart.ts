@@ -33,7 +33,13 @@ export function useCart() {
   // auth token instead of showing an empty state until the user hits refresh.
   useEffect(() => {
     if (isAuthenticated) {
-      queryClient.invalidateQueries({ queryKey: CART_KEY });
+      // Use refetchQueries (not invalidateQueries) so the already-mounted
+      // Header observer is forced to fetch immediately. The cart query lives
+      // for the whole app because the Header calls useCart() for the badge, so
+      // it never unmounts and refetchOnMount never re-triggers on /cart — an
+      // explicit refetch on the login/hydration transition is what actually
+      // repopulates it without a manual page refresh.
+      queryClient.refetchQueries({ queryKey: CART_KEY });
     }
   }, [isAuthenticated, queryClient]);
 
