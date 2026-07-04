@@ -19,8 +19,10 @@ export function useCart() {
       return res.data.data ?? null;
     },
     enabled: isAuthenticated,
-    // Cart data changes frequently, always fetch fresh on mount
-    refetchOnMount: true,
+    // Cart data changes frequently, always fetch fresh on mount.
+    // `always` forces a network fetch even if a cached value exists, so
+    // navigating to /cart right after adding an item never shows stale/empty.
+    refetchOnMount: 'always',
     staleTime: 0,
   });
 
@@ -52,9 +54,15 @@ export function useAddToCart() {
   return useMutation({
     mutationFn: async (payload: { productId: string; variant?: { size?: string; color?: string }; qty: number }) => {
       const res = await apiClient.post<ApiResponse<Cart>>('/cart/items', payload);
-      return res.data.data;
+      return res.data.data ?? null;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: CART_KEY }),
+    // The add-item endpoint returns the full updated cart. Write it straight
+    // into the cache so navigating to /cart shows items immediately, with no
+    // refetch race that would otherwise flash an empty cart on first mount.
+    onSuccess: (cart) => {
+      if (cart) queryClient.setQueryData(CART_KEY, cart);
+      queryClient.invalidateQueries({ queryKey: CART_KEY });
+    },
   });
 }
 
