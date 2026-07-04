@@ -44,13 +44,22 @@ export function CartPage() {
   const navigate = useNavigate();
   const [coupon, setCoupon] = useState('');
 
-  // Show spinner while:
-  // 1. Cart is actively being fetched
-  // 2. User is authenticated but cart data hasn't arrived yet
-  // (prevents empty-cart flash before auth+data are ready)
+  // TEMP DEBUG - render state as visible text
+  const debugState = {
+    isAuthenticated,
+    isLoading,
+    isFetching,
+    cartType: cart === undefined ? 'undefined' : cart === null ? 'null' : 'object',
+    itemsCount: cart?.items?.length ?? 'no items array',
+    activeCount: cart?.items?.filter((i: any) => !i.savedForLater)?.length ?? 'N/A',
+    firstItemProduct: cart?.items?.[0]?.product?.name ?? 'no first item',
+  };
+
   if (isLoading || isFetching || (isAuthenticated && cart === undefined)) {
     return (
-      <div className="container flex justify-center py-24">
+      <div className="container py-24">
+        <p style={{color: 'yellow'}}>LOADING STATE</p>
+        <pre style={{color: 'yellow'}}>{JSON.stringify(debugState, null, 2)}</pre>
         <Spinner size="lg" />
       </div>
     );
@@ -61,7 +70,9 @@ export function CartPage() {
 
   if (!cart || activeItems.length === 0) {
     return (
-      <div className="container py-24 text-center">
+      <div className="container py-24">
+        <p style={{color: 'red'}}>EMPTY STATE - Debug info:</p>
+        <pre style={{color: 'red', textAlign: 'left'}}>{JSON.stringify(debugState, null, 2)}</pre>
         <p className="text-lg font-medium text-foreground">Your cart is empty</p>
         <Button className="mt-4" onClick={() => navigate('/products')}>
           Continue shopping
