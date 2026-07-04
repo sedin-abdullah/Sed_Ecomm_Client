@@ -135,9 +135,9 @@ export function OrderDetailPage() {
             </div>
           </div>
           <div className="border-t border-border pt-3 text-sm text-muted-foreground">
-            <p className="font-medium text-foreground">{order.address.fullName}</p>
-            <p>{order.address.line1}, {order.address.city}, {order.address.state} {order.address.postalCode}</p>
-            <p>{order.address.country}</p>
+            <p className="font-medium text-foreground">{order.shippingAddress.fullName}</p>
+            <p>{order.shippingAddress.line1}, {order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.postalCode}</p>
+            <p>{order.shippingAddress.country}</p>
           </div>
         </CardBody>
       </Card>
