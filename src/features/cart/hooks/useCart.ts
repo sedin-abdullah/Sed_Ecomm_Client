@@ -18,6 +18,9 @@ export function useCart() {
       return res.data.data ?? null;
     },
     enabled: isAuthenticated,
+    // Cart data changes frequently, always fetch fresh on mount
+    refetchOnMount: true,
+    staleTime: 0,
   });
 
   useEffect(() => {
