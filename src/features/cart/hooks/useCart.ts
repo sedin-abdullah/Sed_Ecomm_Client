@@ -52,6 +52,16 @@ export function useCart() {
     setCartCount(count);
   }, [query.data, isAuthenticated, setCartCount]);
 
+  // TEMP DEBUG
+  if (typeof window !== 'undefined') {
+    console.log('[useCart]', new Date().toISOString().slice(11,23), {
+      status: query.status,
+      fetchStatus: query.fetchStatus,
+      isAuthenticated,
+      dataItems: query.data?.items?.length ?? 'none',
+    });
+  }
+
   return query;
 }
 
