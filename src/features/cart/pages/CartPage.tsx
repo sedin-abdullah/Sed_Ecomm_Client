@@ -10,6 +10,7 @@ import {
   useRemoveCoupon,
 } from '@/features/cart/hooks/useCart';
 import { useAddToWishlist } from '@/features/wishlist/hooks/useWishlist';
+import { useAuthStore } from '@/store/authStore';
 import { Card, CardBody } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -21,7 +22,8 @@ import { handleImageError } from '@/lib/imageFallback';
 import { useProductI18n } from '@/lib/productI18n';
 
 export function CartPage() {
-  const { data: cart, isLoading } = useCart();
+  const { data: cart, isLoading, isFetching } = useCart();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const updateItem = useUpdateCartItem();
   const removeItem = useRemoveCartItem();
   const toggleSave = useToggleSaveForLater();
@@ -42,7 +44,11 @@ export function CartPage() {
   const navigate = useNavigate();
   const [coupon, setCoupon] = useState('');
 
-  if (isLoading) {
+  // Show spinner while:
+  // 1. Cart is actively being fetched
+  // 2. User is authenticated but cart data hasn't arrived yet
+  // (prevents empty-cart flash before auth+data are ready)
+  if (isLoading || isFetching || (isAuthenticated && cart === undefined)) {
     return (
       <div className="container flex justify-center py-24">
         <Spinner size="lg" />
