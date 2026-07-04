@@ -10,6 +10,7 @@ const CART_KEY = ['cart'];
 export function useCart() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const setCartCount = useCartCountStore((state) => state.setCartCount);
+  const queryClient = useQueryClient();
 
   const query = useQuery({
     queryKey: CART_KEY,
@@ -22,6 +23,17 @@ export function useCart() {
     refetchOnMount: true,
     staleTime: 0,
   });
+
+  // When auth transitions from false -> true (e.g. refresh-token flow completes
+  // AFTER the component has mounted), useQuery's `enabled` flip re-activates
+  // the query, but React Query may still return the previous cached snapshot.
+  // Explicitly invalidate here to guarantee the cart re-fetches with the fresh
+  // auth token instead of showing an empty state until the user hits refresh.
+  useEffect(() => {
+    if (isAuthenticated) {
+      queryClient.invalidateQueries({ queryKey: CART_KEY });
+    }
+  }, [isAuthenticated, queryClient]);
 
   useEffect(() => {
     if (!isAuthenticated) {
