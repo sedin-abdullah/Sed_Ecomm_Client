@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Trash2, BookmarkPlus, Heart } from 'lucide-react';
 import {
@@ -22,8 +22,16 @@ import { handleImageError } from '@/lib/imageFallback';
 import { useProductI18n } from '@/lib/productI18n';
 
 export function CartPage() {
-  const { data: cart, isLoading, isFetching } = useCart();
+  const { data: cart, isLoading, isFetching, refetch } = useCart();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
+  // The Header calls useCart() too, so the ['cart'] query stays mounted for the
+  // whole app and refetchOnMount never fires when THIS page mounts. Force a
+  // fresh GET /cart on every visit to /cart so newly-added items and post-login
+  // state show immediately without a manual page refresh.
+  useEffect(() => {
+    void refetch();
+  }, [refetch]);
   const updateItem = useUpdateCartItem();
   const removeItem = useRemoveCartItem();
   const toggleSave = useToggleSaveForLater();
