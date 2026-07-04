@@ -46,23 +46,34 @@ export function useUpdateProfile() {
 
 export function useLogin() {
   const login = useAuthStore((state) => state.login);
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (payload: { email: string; password: string }) => {
       const res = await apiClient.post<ApiResponse<AuthResponse>>('/auth/login', payload);
       return res.data.data!;
     },
-    onSuccess: (data) => login(data.user, data.accessToken),
+    onSuccess: (data) => {
+      login(data.user, data.accessToken);
+      // Drop any cached logged-out state (empty cart/wishlist) so these
+      // queries refetch with the new auth token. Without this, navigating to
+      // /cart right after login shows the stale empty cache until a refresh.
+      queryClient.invalidateQueries();
+    },
   });
 }
 
 export function useRegister() {
   const login = useAuthStore((state) => state.login);
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (payload: { name: string; email: string; password: string }) => {
       const res = await apiClient.post<ApiResponse<AuthResponse>>('/auth/register', payload);
       return res.data.data!;
     },
-    onSuccess: (data) => login(data.user, data.accessToken),
+    onSuccess: (data) => {
+      login(data.user, data.accessToken);
+      queryClient.invalidateQueries();
+    },
   });
 }
 
