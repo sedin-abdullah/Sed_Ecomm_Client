@@ -23,5 +23,19 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Unregister any previously-installed service workers and clear their
+      // caches. The PWA was removed because its stale cache served outdated
+      // JS chunk names, causing "Failed to fetch dynamically imported module"
+      // errors and stale data after each deploy.
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then((regs) => {
+          regs.forEach((reg) => reg.unregister());
+        });
+        if (window.caches) {
+          caches.keys().then((keys) => keys.forEach((k) => caches.delete(k)));
+        }
+      }
+    </script>
   </body>
 </html>

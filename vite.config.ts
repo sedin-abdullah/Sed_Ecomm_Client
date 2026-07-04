@@ -1,34 +1,10 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'node:path';
-import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
   plugins: [
     react(),
-    VitePWA({
-      registerType: 'autoUpdate',
-      manifest: false,
-      includeAssets: ['favicon.svg', 'robots.txt'],
-      workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,ico,webmanifest}'],
-        // SPA fallback: serve index.html for any navigation the SW intercepts
-        // so React Router can handle the route client-side.
-        navigateFallback: '/index.html',
-        // Never cache API responses - they must always hit the network.
-        navigateFallbackDenylist: [/^\/api\//],
-        // Bypass SW entirely for API requests to prevent stale data.
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/sed-ecomm-api\.onrender\.com\/.*/,
-            handler: 'NetworkOnly',
-          },
-        ],
-      },
-      devOptions: {
-        enabled: false,
-      },
-    }),
   ],
   resolve: {
     alias: {
