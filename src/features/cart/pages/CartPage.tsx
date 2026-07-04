@@ -44,22 +44,9 @@ export function CartPage() {
   const navigate = useNavigate();
   const [coupon, setCoupon] = useState('');
 
-  // TEMP DEBUG - render state as visible text
-  const debugState = {
-    isAuthenticated,
-    isLoading,
-    isFetching,
-    cartType: cart === undefined ? 'undefined' : cart === null ? 'null' : 'object',
-    itemsCount: cart?.items?.length ?? 'no items array',
-    activeCount: cart?.items?.filter((i: any) => !i.savedForLater)?.length ?? 'N/A',
-    firstItemProduct: cart?.items?.[0]?.product?.name ?? 'no first item',
-  };
-
   if (isLoading || isFetching || (isAuthenticated && cart === undefined)) {
     return (
-      <div className="container py-24">
-        <p style={{color: 'yellow'}}>LOADING STATE</p>
-        <pre style={{color: 'yellow'}}>{JSON.stringify(debugState, null, 2)}</pre>
+      <div className="container flex justify-center py-24">
         <Spinner size="lg" />
       </div>
     );
@@ -70,9 +57,7 @@ export function CartPage() {
 
   if (!cart || activeItems.length === 0) {
     return (
-      <div className="container py-24">
-        <p style={{color: 'red'}}>EMPTY STATE - Debug info:</p>
-        <pre style={{color: 'red', textAlign: 'left'}}>{JSON.stringify(debugState, null, 2)}</pre>
+      <div className="container py-24 text-center">
         <p className="text-lg font-medium text-foreground">Your cart is empty</p>
         <Button className="mt-4" onClick={() => navigate('/products')}>
           Continue shopping
