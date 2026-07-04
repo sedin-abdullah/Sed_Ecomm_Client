@@ -24,6 +24,16 @@ import { useProductI18n } from '@/lib/productI18n';
 export function CartPage() {
   const { data: cart, isLoading, isFetching } = useCart();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
+  // TEMPORARY DEBUG - remove after fixing
+  console.log('[CartPage render]', {
+    isAuthenticated,
+    isLoading,
+    isFetching,
+    cartIsUndefined: cart === undefined,
+    cartIsNull: cart === null,
+    itemsLength: cart?.items?.length,
+  });
   const updateItem = useUpdateCartItem();
   const removeItem = useRemoveCartItem();
   const toggleSave = useToggleSaveForLater();
