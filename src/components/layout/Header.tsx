@@ -100,7 +100,7 @@ export function Header() {
             {t('nav.shop')}
           </Link>
           <Link
-            to="/products?sort=price_asc&flashSale=1"
+            to="/products?onSale=1"
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             {t('nav.deals')}

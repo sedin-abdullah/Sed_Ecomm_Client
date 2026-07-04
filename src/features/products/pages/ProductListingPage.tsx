@@ -161,6 +161,7 @@ export function ProductListingPage() {
     category: searchParams.get('category') ?? undefined,
     search: searchParams.get('search') ?? undefined,
     sort: (searchParams.get('sort') as SortOption | null) ?? undefined,
+    onSale: searchParams.get('onSale') === '1' ? true : undefined,
   }));
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useProducts(filters);
@@ -170,7 +171,7 @@ export function ProductListingPage() {
     <div className="container py-8">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold tracking-tight">
-          {filters.search ? `Results for "${filters.search}"` : 'Shop all products'}
+          {filters.search ? `Results for "${filters.search}"` : filters.onSale ? 'Deals & Offers' : 'Shop all products'}
         </h1>
         <div className="flex items-center gap-2">
           <Select
