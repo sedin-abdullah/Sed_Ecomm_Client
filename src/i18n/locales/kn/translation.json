@@ -1,0 +1,49 @@
+{
+  "app": { "name": "Sed_Ecomm", "tagline": "ಆಲೋಚನಾಪೂರ್ಣವಾಗಿ ವಿನ್ಯಾಸಗೊಳಿಸಿದ ಪ್ರೀಮಿಯಂ ಶಾಪಿಂಗ್." },
+  "nav": {
+    "home": "ಮುಖಪುಟ", "shop": "ಶಾಪ್", "categories": "ವರ್ಗಗಳು", "deals": "ಡೀಲ್‌ಗಳು",
+    "search_placeholder": "ಉತ್ಪನ್ನಗಳನ್ನು ಹುಡುಕಿ...", "wishlist": "ವಿಶ್‌ಲಿಸ್ಟ್", "cart": "ಕಾರ್ಟ್",
+    "account": "ಖಾತೆ", "menu": "ಮೆನು", "design_system": "ಡಿಸೈನ್ ಸಿಸ್ಟಮ್"
+  },
+  "footer": {
+    "about_title": "ಬಗ್ಗೆ", "about_us": "ನಮ್ಮ ಬಗ್ಗೆ", "careers": "ಉದ್ಯೋಗಗಳು", "press": "ಪ್ರೆಸ್",
+    "help_title": "ಸಹಾಯ", "help_center": "ಸಹಾಯ ಕೇಂದ್ರ", "shipping_returns": "ಶಿಪ್ಪಿಂಗ್ & ರಿಟರ್ನ್ಸ್",
+    "track_order": "ಆರ್ಡರ್ ಟ್ರ್ಯಾಕ್ ಮಾಡಿ", "contact_us": "ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ",
+    "legal_title": "ಕಾನೂನು", "terms": "ಸೇವಾ ನಿಯಮಗಳು", "privacy": "ಗೌಪ್ಯತಾ ನೀತಿ", "cookies": "ಕುಕೀ ನೀತಿ",
+    "newsletter_title": "ಅಪ್‌ಡೇಟ್ ಆಗಿರಿ", "newsletter_subtitle": "ಹೊಸ ಉತ್ಪನ್ನಗಳು, ಆಫರ್‌ಗಳು ಮತ್ತು ಸುದ್ದಿಗಳನ್ನು ಪಡೆಯಿರಿ.",
+    "newsletter_placeholder": "ನಿಮ್ಮ ಇಮೇಲ್ ನಮೂದಿಸಿ", "subscribe": "ಚಂದಾದಾರರಾಗಿ",
+    "rights": "© {{year}} Sed_Ecomm. ಎಲ್ಲಾ ಹಕ್ಕುಗಳನ್ನು ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ."
+  },
+  "auth": {
+    "login": "ಲಾಗಿನ್", "register": "ಸೈನ್ ಅಪ್", "logout": "ಲಾಗ್ ಔಟ್",
+    "email": "ಇಮೇಲ್", "email_placeholder": "you@example.com", "password": "ಪಾಸ್‌ವರ್ಡ್",
+    "confirm_password": "ಪಾಸ್‌ವರ್ಡ್ ದೃಢೀಕರಿಸಿ", "name": "ಪೂರ್ಣ ಹೆಸರು", "name_placeholder": "ಜೇನ್ ಡೋ",
+    "forgot_password": "ಪಾಸ್‌ವರ್ಡ್ ಮರೆತಿರಾ?", "remember_me": "ನನ್ನನ್ನು ನೆನಪಿಡಿ",
+    "no_account": "ಖಾತೆ ಇಲ್ಲವೇ?", "have_account": "ಈಗಾಗಲೇ ಖಾತೆ ಇದೆಯೇ?",
+    "sign_in_cta": "ಸೈನ್ ಇನ್", "sign_up_cta": "ಖಾತೆ ರಚಿಸಿ", "reset_password": "ಪಾಸ್‌ವರ್ಡ್ ಮರುಹೊಂದಿಸಿ"
+  },
+  "common": {
+    "loading": "ಲೋಡ್ ಆಗುತ್ತಿದೆ...", "error": "ಏನೋ ತಪ್ಪಾಗಿದೆ", "retry": "ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ",
+    "save": "ಉಳಿಸಿ", "cancel": "ರದ್ದುಮಾಡಿ", "confirm": "ದೃಢೀಕರಿಸಿ", "close": "ಮುಚ್ಚಿ",
+    "back": "ಹಿಂದೆ", "next": "ಮುಂದೆ", "submit": "ಸಲ್ಲಿಸಿ", "search": "ಹುಡುಕಿ",
+    "view_all": "ಎಲ್ಲಾ ವೀಕ್ಷಿಸಿ", "add_to_cart": "ಕಾರ್ಟ್‌ಗೆ ಸೇರಿಸಿ", "buy_now": "ಈಗ ಖರೀದಿಸಿ",
+    "out_of_stock": "ಸ್ಟಾಕ್ ಇಲ್ಲ", "in_stock": "ಸ್ಟಾಕ್‌ನಲ್ಲಿದೆ", "price": "ಬೆಲೆ",
+    "quantity": "ಪ್ರಮಾಣ", "total": "ಒಟ್ಟು", "yes": "ಹೌದು", "no": "ಇಲ್ಲ"
+  },
+  "theme": { "light": "ಲೈಟ್", "dark": "ಡಾರ್ಕ್", "system": "ಸಿಸ್ಟಮ್", "toggle": "ಥೀಮ್ ಬದಲಿಸಿ" },
+  "language": { "select": "ಭಾಷೆ ಆಯ್ಕೆಮಾಡಿ" },
+  "toast": { "success": "ಯಶಸ್ಸು", "error": "ದೋಷ", "info": "ಮಾಹಿತಿ", "warning": "ಎಚ್ಚರಿಕೆ" },
+  "mobile_nav": { "home": "ಮುಖಪುಟ", "shop": "ಶಾಪ್", "wishlist": "ವಿಶ್‌ಲಿಸ್ಟ್", "cart": "ಕಾರ್ಟ್", "account": "ಖಾತೆ" },
+  "home": {
+    "badge": "ಫೌಂಡೇಶನ್ ಬಿಲ್ಡ್", "title": "Sed_Ecomm — ಸಿದ್ಧವಾಗಿದೆ",
+    "subtitle": "ಡಿಸೈನ್ ಸಿಸ್ಟಮ್, ಥೀಮಿಂಗ್, ಲೇಔಟ್ ಮತ್ತು ಹಂಚಿಕೆಯ ಮೂಲಸೌಕರ್ಯ ಸಿದ್ಧವಾಗಿದೆ.",
+    "cta_primary": "ಡಿಸೈನ್ ಸಿಸ್ಟಮ್ ವೀಕ್ಷಿಸಿ", "cta_secondary": "ಡಾಕ್ಸ್ ಓದಿ"
+  },
+  "design_system": {
+    "title": "ಡಿಸೈನ್ ಸಿಸ್ಟಮ್", "subtitle": "ಲೈಟ್ ಮತ್ತು ಡಾರ್ಕ್ ಥೀಮ್‌ಗಳಲ್ಲಿ ಪ್ರತಿ UI ಘಟಕದ ಉಲ್ಲೇಖ.",
+    "buttons": "ಬಟನ್‌ಗಳು", "badges": "ಬ್ಯಾಡ್ಜ್‌ಗಳು", "inputs": "ಇನ್‌ಪುಟ್‌ಗಳು", "cards": "ಕಾರ್ಡ್‌ಗಳು", "tabs": "ಟ್ಯಾಬ್‌ಗಳು",
+    "modal": "ಮೋಡಲ್", "drawer": "ಡ್ರಾಯರ್", "toast": "ಟೋಸ್ಟ್", "skeleton": "ಸ್ಕೆಲಿಟನ್", "spinner": "ಸ್ಪಿನ್ನರ್",
+    "rating": "ರೇಟಿಂಗ್ ಸ್ಟಾರ್‌ಗಳು", "open_modal": "ಮೋಡಲ್ ತೆರೆಯಿರಿ", "open_drawer": "ಡ್ರಾಯರ್ ತೆರೆಯಿರಿ",
+    "trigger_toast": "ಟೋಸ್ಟ್ ತೋರಿಸಿ"
+  }
+}

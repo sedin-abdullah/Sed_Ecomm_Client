@@ -1,0 +1,49 @@
+{
+  "app": { "name": "Sed_Ecomm", "tagline": "శ్రద్ధగా రూపొందించిన ప్రీమియం షాపింగ్." },
+  "nav": {
+    "home": "హోమ్", "shop": "షాప్", "categories": "కేటగిరీలు", "deals": "డీల్స్",
+    "search_placeholder": "ఉత్పత్తులను శోధించండి...", "wishlist": "విష్‌లిస్ట్", "cart": "కార్ట్",
+    "account": "ఖాతా", "menu": "మెనూ", "design_system": "డిజైన్ సిస్టమ్"
+  },
+  "footer": {
+    "about_title": "గురించి", "about_us": "మా గురించి", "careers": "కెరీర్స్", "press": "ప్రెస్",
+    "help_title": "సహాయం", "help_center": "సహాయ కేంద్రం", "shipping_returns": "షిప్పింగ్ & రిటర్న్‌లు",
+    "track_order": "ఆర్డర్‌ను ట్రాక్ చేయండి", "contact_us": "మమ్మల్ని సంప్రదించండి",
+    "legal_title": "చట్టపరమైన", "terms": "సేవా నిబంధనలు", "privacy": "గోప్యతా విధానం", "cookies": "కుకీ విధానం",
+    "newsletter_title": "అప్‌డేట్‌గా ఉండండి", "newsletter_subtitle": "కొత్త ఉత్పత్తులు, ఆఫర్‌లు, వార్తలు మీ ఇన్‌బాక్స్‌లో పొందండి.",
+    "newsletter_placeholder": "మీ ఇమెయిల్ నమోదు చేయండి", "subscribe": "సబ్‌స్క్రైబ్ చేయండి",
+    "rights": "© {{year}} Sed_Ecomm. అన్ని హక్కులు రిజర్వ్ చేయబడ్డాయి."
+  },
+  "auth": {
+    "login": "లాగిన్", "register": "సైన్ అప్", "logout": "లాగ్ అవుట్",
+    "email": "ఇమెయిల్", "email_placeholder": "you@example.com", "password": "పాస్‌వర్డ్",
+    "confirm_password": "పాస్‌వర్డ్ నిర్ధారించండి", "name": "పూర్తి పేరు", "name_placeholder": "జేన్ డో",
+    "forgot_password": "పాస్‌వర్డ్ మర్చిపోయారా?", "remember_me": "నన్ను గుర్తుంచుకో",
+    "no_account": "ఖాతా లేదా?", "have_account": "ఇప్పటికే ఖాతా ఉందా?",
+    "sign_in_cta": "సైన్ ఇన్", "sign_up_cta": "ఖాతా సృష్టించండి", "reset_password": "పాస్‌వర్డ్ రీసెట్ చేయండి"
+  },
+  "common": {
+    "loading": "లోడ్ అవుతోంది...", "error": "ఏదో తప్పు జరిగింది", "retry": "మళ్ళీ ప్రయత్నించండి",
+    "save": "సేవ్ చేయండి", "cancel": "రద్దు చేయండి", "confirm": "నిర్ధారించండి", "close": "మూసివేయండి",
+    "back": "వెనుకకు", "next": "తదుపరి", "submit": "సమర్పించండి", "search": "శోధించండి",
+    "view_all": "అన్నీ చూడండి", "add_to_cart": "కార్ట్‌కు జోడించండి", "buy_now": "ఇప్పుడే కొనండి",
+    "out_of_stock": "స్టాక్ లేదు", "in_stock": "స్టాక్‌లో ఉంది", "price": "ధర",
+    "quantity": "పరిమాణం", "total": "మొత్తం", "yes": "అవును", "no": "కాదు"
+  },
+  "theme": { "light": "లైట్", "dark": "డార్క్", "system": "సిస్టమ్", "toggle": "థీమ్ మార్చండి" },
+  "language": { "select": "భాషను ఎంచుకోండి" },
+  "toast": { "success": "విజయం", "error": "లోపం", "info": "సమాచారం", "warning": "హెచ్చరిక" },
+  "mobile_nav": { "home": "హోమ్", "shop": "షాప్", "wishlist": "విష్‌లిస్ట్", "cart": "కార్ట్", "account": "ఖాతా" },
+  "home": {
+    "badge": "ఫౌండేషన్ బిల్డ్", "title": "Sed_Ecomm — సిద్ధంగా ఉంది",
+    "subtitle": "డిజైన్ సిస్టమ్, థీమింగ్, లేఅవుట్, షేర్డ్ ఇన్‌ఫ్రాస్ట్రక్చర్ సిద్ధంగా ఉన్నాయి.",
+    "cta_primary": "డిజైన్ సిస్టమ్ చూడండి", "cta_secondary": "డాక్స్ చదవండి"
+  },
+  "design_system": {
+    "title": "డిజైన్ సిస్టమ్", "subtitle": "లైట్ మరియు డార్క్ థీమ్‌లలో ప్రతి UI మూలకం యొక్క సూచన.",
+    "buttons": "బటన్లు", "badges": "బ్యాడ్జ్‌లు", "inputs": "ఇన్‌పుట్‌లు", "cards": "కార్డులు", "tabs": "ట్యాబ్‌లు",
+    "modal": "మోడల్", "drawer": "డ్రాయర్", "toast": "టోస్ట్", "skeleton": "స్కెలిటన్", "spinner": "స్పిన్నర్",
+    "rating": "రేటింగ్ స్టార్స్", "open_modal": "మోడల్ తెరవండి", "open_drawer": "డ్రాయర్ తెరవండి",
+    "trigger_toast": "టోస్ట్ చూపించండి"
+  }
+}
