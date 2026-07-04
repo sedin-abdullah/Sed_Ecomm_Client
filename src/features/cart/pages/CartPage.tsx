@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Trash2, BookmarkPlus, Heart } from 'lucide-react';
 import {
@@ -10,7 +10,6 @@ import {
   useRemoveCoupon,
 } from '@/features/cart/hooks/useCart';
 import { useAddToWishlist } from '@/features/wishlist/hooks/useWishlist';
-import { useAuthStore } from '@/store/authStore';
 import { Card, CardBody } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -22,16 +21,7 @@ import { handleImageError } from '@/lib/imageFallback';
 import { useProductI18n } from '@/lib/productI18n';
 
 export function CartPage() {
-  const { data: cart, isLoading, isFetching, refetch } = useCart();
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-
-  // The Header calls useCart() too, so the ['cart'] query stays mounted for the
-  // whole app and refetchOnMount never fires when THIS page mounts. Force a
-  // fresh GET /cart on every visit to /cart so newly-added items and post-login
-  // state show immediately without a manual page refresh.
-  useEffect(() => {
-    void refetch();
-  }, [refetch]);
+  const { data: cart, isLoading } = useCart();
   const updateItem = useUpdateCartItem();
   const removeItem = useRemoveCartItem();
   const toggleSave = useToggleSaveForLater();
@@ -52,7 +42,7 @@ export function CartPage() {
   const navigate = useNavigate();
   const [coupon, setCoupon] = useState('');
 
-  if (isLoading || isFetching || (isAuthenticated && cart === undefined)) {
+  if (isLoading) {
     return (
       <div className="container flex justify-center py-24">
         <Spinner size="lg" />

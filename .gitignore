@@ -36,3 +36,6 @@ dist-ssr
 dev-dist
 sw.js
 workbox-*.js
+
+# TypeScript incremental build cache
+*.tsbuildinfo

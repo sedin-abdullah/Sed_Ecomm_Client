@@ -31,15 +31,9 @@ export interface OrderTrackingEvent {
 export interface Order {
   id: string;
   items: OrderItem[];
-  shippingAddress: Address;
-  user?: {
-    id: string;
-    name?: string;
-    email?: string;
-  };
+  address: Address;
   status: OrderStatus;
   paymentMethod: string;
-  paymentStatus?: 'pending' | 'success' | 'failed';
   couponCode?: string;
   subtotal: number;
   discount?: number;

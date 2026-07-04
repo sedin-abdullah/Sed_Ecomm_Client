@@ -155,35 +155,13 @@ function FilterPanel({
 }
 
 export function ProductListingPage() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [drawerOpen, setDrawerOpen] = useState(false);
-
-  // Derive filters from URL params reactively - re-computes when URL changes
-  // (e.g. navigating from Shop to Deals or vice versa without unmounting).
-  const filters = useMemo<ProductFilters>(() => ({
+  const [filters, setFilters] = useState<ProductFilters>(() => ({
     category: searchParams.get('category') ?? undefined,
     search: searchParams.get('search') ?? undefined,
     sort: (searchParams.get('sort') as SortOption | null) ?? undefined,
-    onSale: searchParams.get('onSale') === '1' ? true : undefined,
-  }), [searchParams]);
-
-  // When filter UI changes, push updates back into the URL as the single
-  // source of truth (this keeps URL shareable and back/forward navigation working).
-  const setFilters = (next: ProductFilters | ((prev: ProductFilters) => ProductFilters)) => {
-    const resolved = typeof next === 'function' ? next(filters) : next;
-    const params = new URLSearchParams();
-    if (resolved.category) params.set('category', resolved.category);
-    if (resolved.search) params.set('search', resolved.search);
-    if (resolved.sort) params.set('sort', resolved.sort);
-    if (resolved.onSale) params.set('onSale', '1');
-    if (resolved.brand) params.set('brand', resolved.brand);
-    if (resolved.minPrice !== undefined) params.set('minPrice', String(resolved.minPrice));
-    if (resolved.maxPrice !== undefined) params.set('maxPrice', String(resolved.maxPrice));
-    if (resolved.size) params.set('size', resolved.size);
-    if (resolved.color) params.set('color', resolved.color);
-    if (resolved.rating !== undefined) params.set('rating', String(resolved.rating));
-    setSearchParams(params, { replace: true });
-  };
+  }));
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useProducts(filters);
   const products = useMemo(() => data?.pages.flatMap((p) => p.data ?? []) ?? [], [data]);
@@ -192,7 +170,7 @@ export function ProductListingPage() {
     <div className="container py-8">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold tracking-tight">
-          {filters.search ? `Results for "${filters.search}"` : filters.onSale ? 'Deals & Offers' : 'Shop all products'}
+          {filters.search ? `Results for "${filters.search}"` : 'Shop all products'}
         </h1>
         <div className="flex items-center gap-2">
           <Select

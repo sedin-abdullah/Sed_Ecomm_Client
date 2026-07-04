@@ -1,5 +1,4 @@
 import { Outlet, useLocation } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
 import { Header } from './Header';
 import { Footer } from './Footer';
 import { MobileBottomNav } from './MobileBottomNav';
@@ -11,13 +10,14 @@ export function Layout() {
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       <Header />
       <main className="flex-1">
-        {/* Keyed by route + wait mode so each navigation runs the enter/exit
-            transition instead of the transition only firing on first mount. */}
-        <AnimatePresence mode="wait" initial={false}>
-          <PageTransition key={location.pathname}>
-            <Outlet />
-          </PageTransition>
-        </AnimatePresence>
+        {/* Keying PageTransition by pathname remounts it on every navigation so
+            the enter animation replays. We deliberately avoid AnimatePresence
+            `mode="wait"` here: with the data-router <Outlet/> it can hold the
+            exiting page and leave the incoming one stuck invisible (blank page
+            until refresh). A plain keyed remount always renders fresh. */}
+        <PageTransition key={location.pathname}>
+          <Outlet />
+        </PageTransition>
       </main>
       <Footer />
       <MobileBottomNav />

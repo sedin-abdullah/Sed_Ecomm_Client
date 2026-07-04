@@ -10,7 +10,6 @@ const CART_KEY = ['cart'];
 export function useCart() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const setCartCount = useCartCountStore((state) => state.setCartCount);
-  const queryClient = useQueryClient();
 
   const query = useQuery({
     queryKey: CART_KEY,
@@ -19,29 +18,7 @@ export function useCart() {
       return res.data.data ?? null;
     },
     enabled: isAuthenticated,
-    // Cart data changes frequently, always fetch fresh on mount.
-    // `always` forces a network fetch even if a cached value exists, so
-    // navigating to /cart right after adding an item never shows stale/empty.
-    refetchOnMount: 'always',
-    staleTime: 0,
   });
-
-  // When auth transitions from false -> true (e.g. refresh-token flow completes
-  // AFTER the component has mounted), useQuery's `enabled` flip re-activates
-  // the query, but React Query may still return the previous cached snapshot.
-  // Explicitly invalidate here to guarantee the cart re-fetches with the fresh
-  // auth token instead of showing an empty state until the user hits refresh.
-  useEffect(() => {
-    if (isAuthenticated) {
-      // Use refetchQueries (not invalidateQueries) so the already-mounted
-      // Header observer is forced to fetch immediately. The cart query lives
-      // for the whole app because the Header calls useCart() for the badge, so
-      // it never unmounts and refetchOnMount never re-triggers on /cart — an
-      // explicit refetch on the login/hydration transition is what actually
-      // repopulates it without a manual page refresh.
-      queryClient.refetchQueries({ queryKey: CART_KEY });
-    }
-  }, [isAuthenticated, queryClient]);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -60,16 +37,9 @@ export function useAddToCart() {
   return useMutation({
     mutationFn: async (payload: { productId: string; variant?: { size?: string; color?: string }; qty: number }) => {
       const res = await apiClient.post<ApiResponse<Cart>>('/cart/items', payload);
-      return res.data.data ?? null;
+      return res.data.data;
     },
-    // Force an immediate refetch of the GET /cart endpoint, which returns the
-    // cart with fully-populated product objects. We deliberately do NOT
-    // setQueryData with the POST response here: the add-item response may
-    // return items whose `product` is an unpopulated ObjectId, which would
-    // overwrite the good cache with unrenderable items until a manual refresh.
-    onSuccess: () => {
-      queryClient.refetchQueries({ queryKey: CART_KEY });
-    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: CART_KEY }),
   });
 }
 

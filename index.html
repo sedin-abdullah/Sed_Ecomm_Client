@@ -9,6 +9,7 @@
       name="description"
       content="Sed_Ecomm — a premium, modern shopping experience."
     />
+    <link rel="manifest" href="/manifest.webmanifest" />
     <!-- TODO(pwa-stage): replace with real PNG apple-touch-icon (180x180) -->
     <link rel="apple-touch-icon" href="/icons/icon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -22,19 +23,5 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <script>
-      // Unregister any previously-installed service workers and clear their
-      // caches. The PWA was removed because its stale cache served outdated
-      // JS chunk names, causing "Failed to fetch dynamically imported module"
-      // errors and stale data after each deploy.
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then((regs) => {
-          regs.forEach((reg) => reg.unregister());
-        });
-        if (window.caches) {
-          caches.keys().then((keys) => keys.forEach((k) => caches.delete(k)));
-        }
-      }
-    </script>
   </body>
 </html>
