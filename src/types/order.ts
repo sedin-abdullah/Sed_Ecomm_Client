@@ -31,7 +31,8 @@ export interface OrderTrackingEvent {
 export interface Order {
   id: string;
   items: OrderItem[];
-  address: Address;
+  // The API populates `shippingAddress` (not `address`).
+  shippingAddress?: Address;
   status: OrderStatus;
   paymentMethod: string;
   couponCode?: string;
