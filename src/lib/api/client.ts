@@ -3,7 +3,9 @@ import { useAuthStore } from '@/store/authStore';
 import type { ApiResponse } from '@/types';
 import type { AuthResponse } from '@/types';
 
-const baseURL = import.meta.env.VITE_API_URL ?? 'http://localhost:5000/api/v1';
+// Prefer the build-time VITE_API_URL; fall back to the deployed backend so the
+// production site still works if the env var isn't set on the host.
+const baseURL = import.meta.env.VITE_API_URL ?? 'https://sed-ecomm-server.onrender.com/api/v1';
 
 export const apiClient = axios.create({
   baseURL,
