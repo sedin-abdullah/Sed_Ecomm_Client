@@ -30,6 +30,8 @@ export interface OrderTrackingEvent {
 
 export interface Order {
   id: string;
+  // Admin listing populates the customer (name/email); absent on a user's own orders.
+  user?: { id?: string; name?: string; email?: string };
   items: OrderItem[];
   // The API populates `shippingAddress` (not `address`).
   shippingAddress?: Address;
