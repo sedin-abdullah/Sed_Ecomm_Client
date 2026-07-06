@@ -71,17 +71,19 @@ export const router = createBrowserRouter([
       { path: 'register', element: lazyPage(RegisterPage) },
       { path: 'forgot-password', element: lazyPage(ForgotPasswordPage) },
       { path: 'reset-password/:token', element: lazyPage(ResetPasswordPage) },
-      {
-        path: 'admin',
-        element: <AdminRoute>{lazyPage(AdminLayout)}</AdminRoute>,
-        children: [
-          { index: true, element: lazyPage(AdminDashboardPage) },
-          { path: 'products', element: lazyPage(AdminProductsPage) },
-          { path: 'orders', element: lazyPage(AdminOrdersPage) },
-          { path: 'customers', element: lazyPage(AdminCustomersPage) },
-          { path: 'coupons', element: lazyPage(AdminCouponsPage) },
-        ],
-      },
+    ],
+  },
+  // Admin lives in its own shell (AdminLayout) — deliberately NOT nested under
+  // the storefront <Layout>, so admins never see the customer Header/cart/etc.
+  {
+    path: '/admin',
+    element: <AdminRoute>{lazyPage(AdminLayout)}</AdminRoute>,
+    children: [
+      { index: true, element: lazyPage(AdminDashboardPage) },
+      { path: 'products', element: lazyPage(AdminProductsPage) },
+      { path: 'orders', element: lazyPage(AdminOrdersPage) },
+      { path: 'customers', element: lazyPage(AdminCustomersPage) },
+      { path: 'coupons', element: lazyPage(AdminCouponsPage) },
     ],
   },
 ]);

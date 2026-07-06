@@ -25,9 +25,15 @@ export function LoginPage() {
 
   function onSubmit(values: FormValues) {
     login.mutate(values, {
-      onSuccess: () => {
+      onSuccess: (data) => {
         toast.success('Welcome back!');
-        navigate((location.state as { from?: string })?.from ?? '/');
+        // Admins go straight to the dashboard-only experience; customers return
+        // to where they were headed (or the storefront home).
+        if (data.user.role === 'admin') {
+          navigate('/admin', { replace: true });
+        } else {
+          navigate((location.state as { from?: string })?.from ?? '/', { replace: true });
+        }
       },
       onError: () => toast.error('Invalid email or password'),
     });
