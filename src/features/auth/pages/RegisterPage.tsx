@@ -7,6 +7,7 @@ import { useRegister } from '@/features/auth/hooks/useAuth';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Card, CardBody } from '@/components/ui/Card';
+import { AuthShell } from '@/features/auth/components/AuthShell';
 import { useToast } from '@/store/toastStore';
 
 const schema = z
@@ -40,7 +41,7 @@ export function RegisterPage() {
   }
 
   return (
-    <div className="container flex min-h-[70vh] items-center justify-center py-12">
+    <AuthShell>
       <Card className="w-full max-w-sm">
         <CardBody className="space-y-5">
           <h1 className="text-xl font-semibold">{t('auth.register')}</h1>
@@ -61,6 +62,6 @@ export function RegisterPage() {
           </p>
         </CardBody>
       </Card>
-    </div>
+    </AuthShell>
   );
 }
