@@ -37,8 +37,8 @@ export function ProductCard({ product, className }: { product: Product; classNam
 
   return (
     <motion.div whileHover={{ y: -4 }} transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }} className={className}>
-      <Card interactive className="group relative overflow-hidden">
-        <Link to={`/products/${product.slug}`}>
+      <Card interactive data-testid="product-card" data-product-slug={product.slug} className="group relative overflow-hidden">
+        <Link to={`/products/${product.slug}`} data-testid="product-link">
           <div className="relative aspect-square overflow-hidden rounded-t-2xl bg-surface-2">
             {image && (
               <img
@@ -56,6 +56,7 @@ export function ProductCard({ product, className }: { product: Product; classNam
             )}
             <motion.button
               type="button"
+              data-testid="wishlist-toggle"
               onClick={handleWishlist}
               aria-label="Add to wishlist"
               whileTap={{ scale: 0.8 }}
@@ -84,7 +85,7 @@ export function ProductCard({ product, className }: { product: Product; classNam
           </div>
           <div className="p-4">
             {product.brand && <p className="text-xs uppercase tracking-wide text-muted-foreground">{product.brand}</p>}
-            <h3 className="mt-1 truncate text-sm font-medium text-foreground">{pi.name(product)}</h3>
+            <h3 data-testid="product-name" className="mt-1 truncate text-sm font-medium text-foreground">{pi.name(product)}</h3>
             <div className="mt-1.5">
               <RatingStars rating={product.rating} count={product.numReviews} size={13} />
             </div>

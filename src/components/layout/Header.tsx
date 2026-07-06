@@ -81,6 +81,7 @@ export function Header() {
       >
         <button
           type="button"
+          data-testid="menu-button"
           className="rounded-lg p-2 text-foreground hover:bg-surface-2 lg:hidden"
           aria-label={t('nav.menu')}
           onClick={() => setMobileOpen((v) => !v)}
@@ -88,19 +89,20 @@ export function Header() {
           {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
         </button>
 
-        <Link to="/" className="shrink-0 text-xl font-bold tracking-tight text-foreground">
+        <Link to="/" data-testid="logo-link" className="shrink-0 text-xl font-bold tracking-tight text-foreground">
           Sed<span className="text-brand-500">_</span>Ecomm
         </Link>
 
         <nav className="hidden items-center gap-6 lg:flex">
-          <Link to="/" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+          <Link to="/" data-testid="nav-home" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
             {t('nav.home')}
           </Link>
-          <Link to="/products" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+          <Link to="/products" data-testid="nav-shop" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
             {t('nav.shop')}
           </Link>
           <Link
             to="/products?sort=price_asc&flashSale=1"
+            data-testid="nav-deals"
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             {t('nav.deals')}
@@ -110,6 +112,7 @@ export function Header() {
         <div ref={searchRef} className="relative ml-auto hidden max-w-sm flex-1 md:block">
           <form onSubmit={submitSearch}>
             <Input
+              data-testid="search-input"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onFocus={() => setSearchFocused(true)}
@@ -146,7 +149,8 @@ export function Header() {
 
         <div className="ml-auto flex items-center gap-1 md:ml-0">
           <select
-            aria-label={t('language.select') ?? 'Language'}
+            data-testid="language-select"
+            aria-label="Select language"
             value={i18n.language}
             onChange={(e) => i18n.changeLanguage(e.target.value)}
             className="hidden rounded-lg border border-border bg-transparent px-2 py-1.5 text-sm text-foreground sm:block"
@@ -159,7 +163,8 @@ export function Header() {
           </select>
 
           <select
-            aria-label="Currency"
+            data-testid="currency-select"
+            aria-label="Select currency"
             value={currency}
             onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
             className="hidden rounded-lg border border-border bg-transparent px-2 py-1.5 text-sm text-foreground sm:block"
@@ -173,6 +178,7 @@ export function Header() {
 
           <button
             type="button"
+            data-testid="theme-toggle"
             onClick={toggleTheme}
             aria-label={t('theme.toggle') ?? 'Toggle theme'}
             className="rounded-lg p-2 text-foreground hover:bg-surface-2"
@@ -180,12 +186,13 @@ export function Header() {
             {resolved === 'dark' ? <Sun className="size-5" /> : <Moon className="size-5" />}
           </button>
 
-          <Link to="/wishlist" aria-label={t('nav.wishlist') ?? 'Wishlist'} className="relative rounded-lg p-2 text-foreground transition-transform hover:scale-110 hover:bg-surface-2">
+          <Link to="/wishlist" data-testid="wishlist-link" aria-label={t('nav.wishlist') ?? 'Wishlist'} className="relative rounded-lg p-2 text-foreground transition-transform hover:scale-110 hover:bg-surface-2">
             <Heart className="size-5" />
             <AnimatePresence>
               {wishlistCount > 0 && (
                 <motion.span
                   key={wishlistCount}
+                  data-testid="wishlist-count"
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   exit={{ scale: 0 }}
@@ -198,12 +205,13 @@ export function Header() {
             </AnimatePresence>
           </Link>
 
-          <Link to="/cart" aria-label={t('nav.cart') ?? 'Cart'} className="relative rounded-lg p-2 text-foreground transition-transform hover:scale-110 hover:bg-surface-2">
+          <Link to="/cart" data-testid="cart-link" aria-label={t('nav.cart') ?? 'Cart'} className="relative rounded-lg p-2 text-foreground transition-transform hover:scale-110 hover:bg-surface-2">
             <ShoppingBag className="size-5" />
             <AnimatePresence>
               {cartCount > 0 && (
                 <motion.span
                   key={cartCount}
+                  data-testid="cart-count"
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   exit={{ scale: 0 }}
@@ -218,6 +226,7 @@ export function Header() {
 
           <Link
             to={isAuthenticated ? '/account' : '/login'}
+            data-testid="account-link"
             aria-label={t('nav.account') ?? 'Account'}
             className="rounded-lg p-2 text-foreground hover:bg-surface-2"
           >

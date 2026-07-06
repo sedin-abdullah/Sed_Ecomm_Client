@@ -45,15 +45,15 @@ export function LoginPage() {
       <Card className="w-full max-w-sm">
         <CardBody className="space-y-5">
           <h1 className="text-xl font-semibold">{t('auth.login')}</h1>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <Input label={t('auth.email') as string} placeholder={t('auth.email_placeholder') as string} error={errors.email?.message} {...register('email')} />
-            <Input label={t('auth.password') as string} type="password" error={errors.password?.message} {...register('password')} />
+          <form onSubmit={handleSubmit(onSubmit)} data-testid="login-form" className="space-y-4">
+            <Input data-testid="login-email" label={t('auth.email') as string} placeholder={t('auth.email_placeholder') as string} error={errors.email?.message} {...register('email')} />
+            <Input data-testid="login-password" label={t('auth.password') as string} type="password" error={errors.password?.message} {...register('password')} />
             <div className="flex justify-end">
               <Link to="/forgot-password" className="text-xs font-medium text-brand-500 hover:underline">
                 {t('auth.forgot_password')}
               </Link>
             </div>
-            <Button type="submit" className="w-full" isLoading={login.isPending}>
+            <Button type="submit" data-testid="login-submit" className="w-full" isLoading={login.isPending}>
               {t('auth.sign_in_cta')}
             </Button>
           </form>
