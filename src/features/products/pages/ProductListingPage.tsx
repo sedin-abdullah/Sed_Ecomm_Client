@@ -157,13 +157,32 @@ function FilterPanel({
 export function ProductListingPage() {
   const [searchParams] = useSearchParams();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [filters, setFilters] = useState<ProductFilters>(() => ({
-    category: searchParams.get('category') ?? undefined,
-    search: searchParams.get('search') ?? undefined,
-    sort: (searchParams.get('sort') as SortOption | null) ?? undefined,
-  }));
+  const [filters, setFilters] = useState<ProductFilters>(() => {
+    const num = (key: string) => {
+      const v = searchParams.get(key);
+      return v !== null && v !== '' && !Number.isNaN(Number(v)) ? Number(v) : undefined;
+    };
+    const bool = (key: string) => {
+      const v = searchParams.get(key);
+      return v === '1' || v === 'true' ? true : undefined;
+    };
+    return {
+      category: searchParams.get('category') ?? undefined,
+      search: searchParams.get('search') ?? undefined,
+      sort: (searchParams.get('sort') as SortOption | null) ?? undefined,
+      brand: searchParams.get('brand') ?? undefined,
+      size: searchParams.get('size') ?? undefined,
+      color: searchParams.get('color') ?? undefined,
+      minPrice: num('minPrice'),
+      maxPrice: num('maxPrice'),
+      rating: num('rating'),
+      inStock: bool('inStock'),
+      onSale: bool('onSale'),
+      flashSale: bool('flashSale'),
+    };
+  });
 
-  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useProducts(filters);
+  const { data, isLoading, isError, refetch, fetchNextPage, hasNextPage, isFetchingNextPage } = useProducts(filters);
   const products = useMemo(() => data?.pages.flatMap((p) => p.data ?? []) ?? [], [data]);
 
   return (
@@ -217,7 +236,16 @@ export function ProductListingPage() {
             </RevealGroup>
           )}
 
-          {!isLoading && products.length === 0 && (
+          {!isLoading && products.length === 0 && isError && (
+            <div className="flex flex-col items-center gap-3 py-16 text-center">
+              <p className="text-muted-foreground">
+                Couldn't reach the server — it may be waking up. This can take up to a minute.
+              </p>
+              <Button variant="outline" onClick={() => refetch()}>Try again</Button>
+            </div>
+          )}
+
+          {!isLoading && products.length === 0 && !isError && (
             <p className="py-16 text-center text-muted-foreground">No products match these filters.</p>
           )}
 

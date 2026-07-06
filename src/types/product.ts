@@ -51,6 +51,7 @@ export interface ProductFilters {
   color?: string;
   inStock?: boolean;
   onSale?: boolean;
+  flashSale?: boolean;
   sort?: 'price_asc' | 'price_desc' | 'newest' | 'popular' | 'rating';
   search?: string;
 }
