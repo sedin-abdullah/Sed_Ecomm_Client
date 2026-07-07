@@ -49,56 +49,39 @@ export function useSetAdminStatus() {
   });
 }
 
-// ---- Approval workflow ----
+// ---- Activity log (fraud monitoring, monitor-only model) ----
 
-export type ChangeStatus = 'pending' | 'approved' | 'rejected';
+export interface FieldChange {
+  field: string;
+  from?: unknown;
+  to?: unknown;
+}
 
-export interface ChangeRequest {
+export interface ActivityEntry {
   id: string;
   actorName: string;
+  actorRole?: string;
   module: 'product' | 'category' | 'coupon' | 'order';
   action: 'create' | 'update' | 'delete' | 'status';
   targetId?: string;
   targetLabel?: string;
+  summary?: string;
+  changes?: FieldChange[];
   payload?: Record<string, unknown>;
   before?: Record<string, unknown>;
-  status: ChangeStatus;
-  reviewerName?: string;
-  reviewedAt?: string;
-  note?: string;
   createdAt: string;
 }
 
-export function useChangeRequests(status?: ChangeStatus) {
+/** Recent admin/manager actions. Pass role='admin' to focus fraud review. */
+export function useActivity(role?: 'admin') {
   return useQuery({
-    queryKey: ['manager', 'change-requests', status ?? 'all'],
+    queryKey: ['manager', 'activity', role ?? 'all'],
     queryFn: async () => {
-      const res = await apiClient.get<ApiResponse<ChangeRequest[]>>('/manager/change-requests', {
-        params: status ? { status } : undefined,
+      const res = await apiClient.get<ApiResponse<ActivityEntry[]>>('/manager/activity', {
+        params: role ? { role } : undefined,
       });
       return res.data.data ?? [];
     },
-    // Near-real-time notifications of admin actions awaiting review.
-    refetchInterval: status === 'pending' ? 15_000 : false,
-  });
-}
-
-export function useApproveChange() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: async (id: string) => {
-      await apiClient.post(`/manager/change-requests/${id}/approve`);
-    },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['manager', 'change-requests'] }),
-  });
-}
-
-export function useRejectChange() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: async ({ id, note }: { id: string; note?: string }) => {
-      await apiClient.post(`/manager/change-requests/${id}/reject`, note ? { note } : {});
-    },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['manager', 'change-requests'] }),
+    refetchInterval: 15_000, // near-real-time monitoring
   });
 }

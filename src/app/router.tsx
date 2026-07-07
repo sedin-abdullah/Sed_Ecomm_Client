@@ -52,8 +52,6 @@ const AdminCouponsPage = () =>
   import('@/features/admin/pages/AdminCouponsPage').then((m) => ({ default: m.AdminCouponsPage }));
 const AdminManagementPage = () =>
   import('@/features/admin/pages/AdminManagementPage').then((m) => ({ default: m.AdminManagementPage }));
-const PendingApprovalPage = () =>
-  import('@/features/admin/pages/PendingApprovalPage').then((m) => ({ default: m.PendingApprovalPage }));
 const AuditTrailPage = () =>
   import('@/features/admin/pages/AuditTrailPage').then((m) => ({ default: m.AuditTrailPage }));
 
@@ -91,8 +89,7 @@ export const router = createBrowserRouter([
       { path: 'customers', element: lazyPage(AdminCustomersPage) },
       { path: 'coupons', element: lazyPage(AdminCouponsPage) },
       { path: 'admins', element: lazyPage(AdminManagementPage) },
-      { path: 'pending', element: lazyPage(PendingApprovalPage) },
-      { path: 'audit', element: lazyPage(AuditTrailPage) },
+      { path: 'activity', element: lazyPage(AuditTrailPage) },
     ],
   },
 ]);
