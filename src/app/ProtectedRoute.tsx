@@ -17,6 +17,7 @@ export function AdminRoute({ children }: { children: ReactNode }) {
   const user = useAuthStore((state) => state.user);
 
   if (!isAuthenticated) return <Navigate to="/login" replace />;
-  if (user?.role !== 'admin') return <Navigate to="/" replace />;
+  // Manager is a superset of Admin, so both may access the admin area.
+  if (user?.role !== 'admin' && user?.role !== 'manager') return <Navigate to="/" replace />;
   return <>{children}</>;
 }

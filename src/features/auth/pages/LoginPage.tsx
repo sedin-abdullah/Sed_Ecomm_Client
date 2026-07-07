@@ -28,9 +28,9 @@ export function LoginPage() {
     login.mutate(values, {
       onSuccess: (data) => {
         toast.success('Welcome back!');
-        // Admins go straight to the dashboard-only experience; customers return
-        // to where they were headed (or the storefront home).
-        if (data.user.role === 'admin') {
+        // Admins/managers go straight to the dashboard-only experience;
+        // customers return to where they were headed (or the storefront home).
+        if (data.user.role === 'admin' || data.user.role === 'manager') {
           navigate('/admin', { replace: true });
         } else {
           navigate((location.state as { from?: string })?.from ?? '/', { replace: true });

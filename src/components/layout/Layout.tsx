@@ -9,9 +9,9 @@ export function Layout() {
   const location = useLocation();
   const role = useAuthStore((s) => s.user?.role);
 
-  // Admins use a dedicated dashboard-only experience — keep them out of the
-  // entire customer storefront (home, products, cart, wishlist, checkout…).
-  if (role === 'admin') return <Navigate to="/admin" replace />;
+  // Admins/managers use a dedicated dashboard-only experience — keep them out
+  // of the entire customer storefront (home, products, cart, wishlist…).
+  if (role === 'admin' || role === 'manager') return <Navigate to="/admin" replace />;
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
