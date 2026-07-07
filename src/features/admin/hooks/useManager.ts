@@ -48,3 +48,57 @@ export function useSetAdminStatus() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ['manager', 'admins'] }),
   });
 }
+
+// ---- Approval workflow ----
+
+export type ChangeStatus = 'pending' | 'approved' | 'rejected';
+
+export interface ChangeRequest {
+  id: string;
+  actorName: string;
+  module: 'product' | 'category' | 'coupon' | 'order';
+  action: 'create' | 'update' | 'delete' | 'status';
+  targetId?: string;
+  targetLabel?: string;
+  payload?: Record<string, unknown>;
+  before?: Record<string, unknown>;
+  status: ChangeStatus;
+  reviewerName?: string;
+  reviewedAt?: string;
+  note?: string;
+  createdAt: string;
+}
+
+export function useChangeRequests(status?: ChangeStatus) {
+  return useQuery({
+    queryKey: ['manager', 'change-requests', status ?? 'all'],
+    queryFn: async () => {
+      const res = await apiClient.get<ApiResponse<ChangeRequest[]>>('/manager/change-requests', {
+        params: status ? { status } : undefined,
+      });
+      return res.data.data ?? [];
+    },
+    // Near-real-time notifications of admin actions awaiting review.
+    refetchInterval: status === 'pending' ? 15_000 : false,
+  });
+}
+
+export function useApproveChange() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      await apiClient.post(`/manager/change-requests/${id}/approve`);
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['manager', 'change-requests'] }),
+  });
+}
+
+export function useRejectChange() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, note }: { id: string; note?: string }) => {
+      await apiClient.post(`/manager/change-requests/${id}/reject`, note ? { note } : {});
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['manager', 'change-requests'] }),
+  });
+}
