@@ -50,6 +50,8 @@ const AdminCustomersPage = () =>
   import('@/features/admin/pages/AdminCustomersPage').then((m) => ({ default: m.AdminCustomersPage }));
 const AdminCouponsPage = () =>
   import('@/features/admin/pages/AdminCouponsPage').then((m) => ({ default: m.AdminCouponsPage }));
+const AdminManagementPage = () =>
+  import('@/features/admin/pages/AdminManagementPage').then((m) => ({ default: m.AdminManagementPage }));
 
 export const router = createBrowserRouter([
   {
@@ -84,6 +86,7 @@ export const router = createBrowserRouter([
       { path: 'orders', element: lazyPage(AdminOrdersPage) },
       { path: 'customers', element: lazyPage(AdminCustomersPage) },
       { path: 'coupons', element: lazyPage(AdminCouponsPage) },
+      { path: 'admins', element: lazyPage(AdminManagementPage) },
     ],
   },
 ]);

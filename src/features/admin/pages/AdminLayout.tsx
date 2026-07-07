@@ -1,5 +1,5 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingCart, Tag, Users, LogOut } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, Tag, Users, ShieldCheck, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/store/authStore';
 
@@ -11,10 +11,17 @@ const NAV = [
   { to: '/admin/coupons', icon: Tag, label: 'Coupons' },
 ];
 
+// Manager-only modules, appended to the sidebar when the user is a manager.
+const MANAGER_NAV = [
+  { to: '/admin/admins', icon: ShieldCheck, label: 'Admins', end: false },
+];
+
 export function AdminLayout() {
   const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
   const logout = useAuthStore((s) => s.logout);
+  const isManager = user?.role === 'manager';
+  const nav = isManager ? [...NAV, ...MANAGER_NAV] : NAV;
 
   function handleLogout() {
     logout();
@@ -26,7 +33,9 @@ export function AdminLayout() {
       <header className="flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
         <div className="flex items-center gap-2">
           <span className="text-lg font-bold tracking-tight">Sed_Ecomm</span>
-          <span className="rounded-full bg-brand-100 px-2 py-0.5 text-xs font-semibold text-brand-700">Admin</span>
+          <span className="rounded-full bg-brand-100 px-2 py-0.5 text-xs font-semibold text-brand-700">
+            {isManager ? 'Manager' : 'Admin'}
+          </span>
         </div>
         <div className="flex items-center gap-3">
           {user?.name && <span className="hidden text-sm text-muted-foreground sm:inline">{user.name}</span>}
@@ -42,7 +51,7 @@ export function AdminLayout() {
 
       <div className="container grid flex-1 gap-8 py-8 lg:grid-cols-[220px_1fr]">
         <aside className="flex gap-2 overflow-x-auto lg:flex-col">
-          {NAV.map(({ to, icon: Icon, label, end }) => (
+          {nav.map(({ to, icon: Icon, label, end }) => (
             <NavLink
               key={to}
               to={to}
