@@ -199,6 +199,7 @@ export interface CreateCouponPayload {
   expiresAt: string;
   usageLimit?: number;
   isActive?: boolean;
+  applicableProducts?: string[]; // empty/omitted = whole cart
 }
 
 export function useCreateCoupon() {

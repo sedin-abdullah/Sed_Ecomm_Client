@@ -58,4 +58,5 @@ export interface Coupon {
   usageLimit?: number;
   usedCount?: number;
   isActive: boolean;
+  applicableProducts?: string[]; // empty = applies to the whole cart
 }
