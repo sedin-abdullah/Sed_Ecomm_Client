@@ -58,5 +58,5 @@ export interface Coupon {
   usageLimit?: number;
   usedCount?: number;
   isActive: boolean;
-  applicableProducts?: string[]; // empty = applies to the whole cart
+  minItems?: number; // cart must hold at least this many items; 0 = no minimum
 }

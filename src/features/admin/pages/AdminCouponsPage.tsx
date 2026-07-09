@@ -1,13 +1,12 @@
-import { useMemo, useState } from 'react';
-import { Trash2, Pencil, X } from 'lucide-react';
+import { useState } from 'react';
+import { Trash2, Pencil } from 'lucide-react';
 import {
   useAdminCoupons,
   useCreateCoupon,
   useUpdateCoupon,
   useDeleteCoupon,
-  useAdminProducts,
 } from '@/features/admin/hooks/useAdmin';
-import type { Coupon, Product } from '@/types';
+import type { Coupon } from '@/types';
 import { Card, CardBody } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -16,7 +15,6 @@ import { useToast } from '@/store/toastStore';
 
 export function AdminCouponsPage() {
   const { data: coupons, isLoading } = useAdminCoupons();
-  const { data: products } = useAdminProducts();
   const createCoupon = useCreateCoupon();
   const updateCoupon = useUpdateCoupon();
   const deleteCoupon = useDeleteCoupon();
@@ -27,19 +25,7 @@ export function AdminCouponsPage() {
   const [type, setType] = useState<'percentage' | 'flat'>('percentage');
   const [value, setValue] = useState('');
   const [expiresAt, setExpiresAt] = useState('');
-  const [applicableProducts, setApplicableProducts] = useState<string[]>([]);
-  const [productQuery, setProductQuery] = useState('');
-
-  const productName = useMemo(() => {
-    const m = new Map<string, string>();
-    (products ?? []).forEach((p: Product) => m.set(p.id, p.name));
-    return m;
-  }, [products]);
-
-  const filteredProducts = useMemo(() => {
-    const q = productQuery.trim().toLowerCase();
-    return (products ?? []).filter((p: Product) => !q || p.name.toLowerCase().includes(q)).slice(0, 40);
-  }, [products, productQuery]);
+  const [minItems, setMinItems] = useState('');
 
   function resetForm() {
     setEditingId(null);
@@ -47,8 +33,7 @@ export function AdminCouponsPage() {
     setType('percentage');
     setValue('');
     setExpiresAt('');
-    setApplicableProducts([]);
-    setProductQuery('');
+    setMinItems('');
   }
 
   function startEdit(c: Coupon) {
@@ -57,17 +42,19 @@ export function AdminCouponsPage() {
     setType(c.type);
     setValue(String(c.value));
     setExpiresAt(c.expiresAt ? c.expiresAt.slice(0, 10) : '');
-    setApplicableProducts(c.applicableProducts ?? []);
+    setMinItems(c.minItems ? String(c.minItems) : '');
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  function toggleProduct(id: string) {
-    setApplicableProducts((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const payload = { code: code.toUpperCase(), type, value: Number(value), expiresAt, applicableProducts };
+    const payload = {
+      code: code.toUpperCase(),
+      type,
+      value: Number(value),
+      expiresAt,
+      minItems: minItems ? Number(minItems) : 0,
+    };
     const onDone = (msg: string) => { toast.success(msg); resetForm(); };
     if (editingId) {
       updateCoupon.mutate({ id: editingId, patch: payload }, {
@@ -89,59 +76,33 @@ export function AdminCouponsPage() {
       <h1 className="text-2xl font-bold tracking-tight">Coupons</h1>
 
       <Card>
-        <CardBody className="space-y-4">
+        <CardBody className="space-y-3">
           {editingId && (
             <p className="text-sm font-medium text-brand-500">Editing coupon — changes go live immediately on save.</p>
           )}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="flex flex-wrap items-end gap-3">
-              <Input label="Code" value={code} onChange={(e) => setCode(e.target.value)} />
-              <Select label="Type" value={type} onChange={(e) => setType(e.target.value as 'percentage' | 'flat')}>
-                <option value="percentage">Percentage</option>
-                <option value="flat">Flat</option>
-              </Select>
-              <Input label="Value" type="number" value={value} onChange={(e) => setValue(e.target.value)} />
-              <Input label="Expires at" type="date" value={expiresAt} onChange={(e) => setExpiresAt(e.target.value)} />
-            </div>
-
-            {/* Product scope */}
-            <div>
-              <div className="mb-1 text-sm font-medium">Applies to</div>
-              <p className="mb-2 text-xs text-muted-foreground">
-                Leave empty to apply to the whole cart. Select products to restrict the discount to only those items.
-              </p>
-              {applicableProducts.length > 0 && (
-                <div className="mb-2 flex flex-wrap gap-1.5">
-                  {applicableProducts.map((id) => (
-                    <span key={id} className="flex items-center gap-1 rounded-full bg-brand-100 px-2 py-0.5 text-xs text-brand-700">
-                      {productName.get(id) ?? 'Product'}
-                      <button type="button" onClick={() => toggleProduct(id)} aria-label="Remove"><X className="size-3" /></button>
-                    </span>
-                  ))}
-                </div>
-              )}
-              <Input placeholder="Search products to add…" value={productQuery} onChange={(e) => setProductQuery(e.target.value)} />
-              {productQuery && (
-                <div className="mt-1 max-h-48 overflow-auto rounded-xl border border-border">
-                  {filteredProducts.length === 0 ? (
-                    <div className="px-3 py-2 text-sm text-muted-foreground">No products match.</div>
-                  ) : (
-                    filteredProducts.map((p: Product) => (
-                      <label key={p.id} className="flex cursor-pointer items-center gap-2 px-3 py-1.5 text-sm hover:bg-surface-2">
-                        <input type="checkbox" checked={applicableProducts.includes(p.id)} onChange={() => toggleProduct(p.id)} />
-                        {p.name}
-                      </label>
-                    ))
-                  )}
-                </div>
-              )}
-            </div>
-
-            <div className="flex gap-3">
-              <Button type="submit" isLoading={saving}>{editingId ? 'Update coupon' : 'Add coupon'}</Button>
-              {editingId && <Button type="button" variant="outline" onClick={resetForm}>Cancel</Button>}
-            </div>
+          <form onSubmit={handleSubmit} className="flex flex-wrap items-end gap-3">
+            <Input label="Code" value={code} onChange={(e) => setCode(e.target.value)} />
+            <Select label="Type" value={type} onChange={(e) => setType(e.target.value as 'percentage' | 'flat')}>
+              <option value="percentage">Percentage</option>
+              <option value="flat">Flat</option>
+            </Select>
+            <Input label="Value" type="number" value={value} onChange={(e) => setValue(e.target.value)} />
+            <Input label="Expires at" type="date" value={expiresAt} onChange={(e) => setExpiresAt(e.target.value)} />
+            <Input
+              label="Min items"
+              type="number"
+              min={0}
+              placeholder="0 = none"
+              value={minItems}
+              onChange={(e) => setMinItems(e.target.value)}
+            />
+            <Button type="submit" isLoading={saving}>{editingId ? 'Update coupon' : 'Add coupon'}</Button>
+            {editingId && <Button type="button" variant="outline" onClick={resetForm}>Cancel</Button>}
           </form>
+          <p className="text-xs text-muted-foreground">
+            “Min items” is a value-based rule: the coupon applies only when the cart holds at least that many items
+            (any products). Leave 0 for no minimum. The discount always applies to the whole cart value.
+          </p>
         </CardBody>
       </Card>
 
@@ -152,7 +113,7 @@ export function AdminCouponsPage() {
               <tr className="border-b border-border text-left text-muted-foreground">
                 <th className="py-2">Code</th>
                 <th className="py-2">Discount</th>
-                <th className="py-2">Applies to</th>
+                <th className="py-2">Min items</th>
                 <th className="py-2">Expires</th>
                 <th className="py-2">Status</th>
                 <th className="py-2 text-right">Actions</th>
@@ -166,9 +127,7 @@ export function AdminCouponsPage() {
                   <tr key={c.id} className="border-b border-border last:border-0">
                     <td className="py-3 font-mono">{c.code}</td>
                     <td>{c.type === 'percentage' ? `${c.value}%` : `$${c.value}`}</td>
-                    <td className="text-muted-foreground">
-                      {c.applicableProducts?.length ? `${c.applicableProducts.length} product${c.applicableProducts.length === 1 ? '' : 's'}` : 'All products'}
-                    </td>
+                    <td className="text-muted-foreground">{c.minItems ? `≥ ${c.minItems}` : '—'}</td>
                     <td className="text-muted-foreground">{c.expiresAt ? new Date(c.expiresAt).toLocaleDateString() : '—'}</td>
                     <td>
                       <button
