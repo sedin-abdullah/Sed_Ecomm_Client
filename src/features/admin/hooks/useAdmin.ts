@@ -170,6 +170,47 @@ export function useUpdateOrderStatus() {
   });
 }
 
+// ---- Refunds ----
+
+/** Orders with a refund request, polled so new requests appear in near-real-time. */
+export function useAdminRefunds() {
+  return useQuery({
+    queryKey: ['admin', 'refunds'],
+    queryFn: async () => {
+      const res = await apiClient.get<ApiResponse<Order[]>>('/admin/orders/refunds');
+      return res.data.data ?? [];
+    },
+    refetchInterval: 15_000,
+  });
+}
+
+export function useProcessRefund() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, method }: { id: string; method: 'card' | 'upi' | 'cash' }) => {
+      await apiClient.post(`/admin/orders/${id}/refund`, { method });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'refunds'] });
+      queryClient.invalidateQueries({ queryKey: ['admin', 'orders'] });
+    },
+  });
+}
+
+/** Cancelled orders for the dedicated Cancelled tab. */
+export function useAdminCancelledOrders() {
+  return useQuery({
+    queryKey: ['admin', 'orders', 'cancelled'],
+    queryFn: async () => {
+      const res = await apiClient.get<PaginatedResponse<Order>>('/admin/orders', {
+        params: { status: 'cancelled', limit: 50 },
+      });
+      return res.data.data ?? [];
+    },
+    refetchInterval: 20_000,
+  });
+}
+
 export function useAdminCustomers() {
   return useQuery({
     queryKey: ['admin', 'customers'],

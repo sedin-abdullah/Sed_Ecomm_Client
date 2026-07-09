@@ -9,6 +9,7 @@ import { Select } from '@/components/ui/Select';
 import { PriceTag } from '@/components/ui/PriceTag';
 import { Modal } from '@/components/ui/Modal';
 import { useToast } from '@/store/toastStore';
+import { useAuthStore } from '@/store/authStore';
 import { cn } from '@/lib/utils';
 import { handleImageError } from '@/lib/imageFallback';
 import { getApiErrorMessage } from '@/lib/apiError';
@@ -74,6 +75,11 @@ export function AdminProductsPage() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [form, setForm] = useState<ProductFormState>(EMPTY_FORM);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
+
+  // Store Owners can manage products but only Manager/Super Admin may change
+  // prices — lock the price fields when a Store Owner edits an existing product.
+  const role = useAuthStore((s) => s.user?.role);
+  const priceLocked = role === 'admin' && !!editingProduct;
 
   function openCreate() {
     setEditingProduct(null);
@@ -233,12 +239,22 @@ export function AdminProductsPage() {
             value={form.description}
             onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
           />
-          <Input label="Price (USD)" type="number" value={form.price} onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))} />
+          <Input
+            label="Price (USD)"
+            type="number"
+            value={form.price}
+            disabled={priceLocked}
+            readOnly={priceLocked}
+            hint={priceLocked ? 'Only Manager and Super Admin can update product prices.' : undefined}
+            onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))}
+          />
           <Input
             label="Discount price (USD)"
             type="number"
-            hint="Leave blank if not on sale"
+            hint={priceLocked ? 'Price editing is disabled. Please contact your Manager.' : 'Leave blank if not on sale'}
             value={form.discountPrice}
+            disabled={priceLocked}
+            readOnly={priceLocked}
             onChange={(e) => setForm((f) => ({ ...f, discountPrice: e.target.value }))}
           />
           <Input label="Stock" type="number" value={form.stock} onChange={(e) => setForm((f) => ({ ...f, stock: e.target.value }))} />

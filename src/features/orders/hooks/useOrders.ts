@@ -9,6 +9,9 @@ export function useOrders() {
       const res = await apiClient.get<PaginatedResponse<Order>>('/orders');
       return res.data.data ?? [];
     },
+    // Poll so refund-status updates from the store appear without a refresh.
+    refetchInterval: 15_000,
+    refetchIntervalInBackground: false,
   });
 }
 
@@ -49,6 +52,16 @@ export function useCancelOrder() {
   return useMutation({
     mutationFn: async (id: string) => {
       await apiClient.post(`/orders/${id}/cancel`);
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['orders'] }),
+  });
+}
+
+export function useRequestRefund() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, reason, comments }: { id: string; reason: string; comments?: string }) => {
+      await apiClient.post(`/orders/${id}/refund`, { reason, comments: comments || undefined });
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['orders'] }),
   });

@@ -28,21 +28,41 @@ export interface OrderTrackingEvent {
   note?: string;
 }
 
+export type RefundMethod = 'card' | 'upi' | 'cash';
+
+export interface RefundInfo {
+  status: 'requested' | 'processed';
+  reason: string;
+  comments?: string;
+  requestedAt: string;
+  method?: RefundMethod;
+  processedAt?: string;
+  processedBy?: string;
+  message?: string;
+}
+
 export interface Order {
   id: string;
   // Admin listing populates the customer (name/email); absent on a user's own orders.
-  user?: { id?: string; name?: string; email?: string };
+  user?: { id?: string; name?: string; email?: string; phone?: string };
   items: OrderItem[];
   // The API populates `shippingAddress` (not `address`).
   shippingAddress?: Address;
   status: OrderStatus;
   paymentMethod: string;
+  paymentStatus?: string;
   couponCode?: string;
   subtotal: number;
   discount?: number;
   shippingFee?: number;
   total: number;
   currency: string;
+  trackingTimeline?: OrderTrackingEvent[];
+  refund?: RefundInfo;
+  cancelledBy?: string;
+  cancellationReason?: string;
+  // Attached by the admin refunds endpoint only.
+  payment?: { id: string; method: string; status: string; amount: number };
   createdAt: string;
   updatedAt: string;
 }
