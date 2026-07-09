@@ -18,6 +18,7 @@ import { QuantityStepper } from '@/components/ui/QuantityStepper';
 import { Spinner } from '@/components/ui/Spinner';
 import { useToast } from '@/store/toastStore';
 import { handleImageError } from '@/lib/imageFallback';
+import { getApiErrorMessage } from '@/lib/apiError';
 import { useProductI18n } from '@/lib/productI18n';
 
 export function CartPage() {
@@ -152,7 +153,9 @@ export function CartPage() {
               onClick={() =>
                 applyCoupon.mutate(coupon, {
                   onSuccess: () => toast.success('Coupon applied'),
-                  onError: () => toast.error('Invalid or expired coupon'),
+                  // Surface the server's specific reason (expired / min order /
+                  // product-scoped / usage limit) instead of a generic message.
+                  onError: (err) => toast.error(getApiErrorMessage(err, 'Invalid or expired coupon')),
                 })
               }
             >
