@@ -3,6 +3,8 @@ import { Navigate } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { Card, CardBody } from '@/components/ui/Card';
+import { isSuperAdmin, roleLabel } from '@/lib/roles';
+import type { UserRole } from '@/types';
 import { useActivity, type ActivityEntry, type FieldChange } from '@/features/admin/hooks/useManager';
 
 function fmtValue(v: unknown): string {
@@ -29,19 +31,20 @@ function Changes({ changes }: { changes?: FieldChange[] }) {
 
 export function AuditTrailPage() {
   const role = useAuthStore((s) => s.user?.role);
-  const [adminsOnly, setAdminsOnly] = useState(false);
-  const { data: items, isLoading } = useActivity(adminsOnly ? 'admin' : undefined);
+  const [ownersOnly, setOwnersOnly] = useState(false);
+  const { data: items, isLoading } = useActivity(ownersOnly ? 'admin' : undefined);
   const [open, setOpen] = useState<string | null>(null);
 
-  if (role && role !== 'manager') return <Navigate to="/admin" replace />;
+  // Complete activity log is Super Admin only.
+  if (role && !isSuperAdmin(role)) return <Navigate to="/admin" replace />;
 
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-bold tracking-tight">Activity Log</h1>
         <label className="flex items-center gap-2 text-sm text-muted-foreground">
-          <input type="checkbox" checked={adminsOnly} onChange={(e) => setAdminsOnly(e.target.checked)} />
-          Admins only (fraud review)
+          <input type="checkbox" checked={ownersOnly} onChange={(e) => setOwnersOnly(e.target.checked)} />
+          Store Owners only (fraud review)
         </label>
       </div>
 
@@ -62,8 +65,8 @@ export function AuditTrailPage() {
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="rounded-full bg-brand-100 px-2 py-0.5 text-xs font-semibold capitalize text-brand-700">{a.module}</span>
                         {a.actorRole && (
-                          <span className={`rounded-full px-2 py-0.5 text-xs font-medium capitalize ${a.actorRole === 'admin' ? 'bg-amber-500/15 text-amber-600' : 'bg-surface-2 text-muted-foreground'}`}>
-                            {a.actorRole}
+                          <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${a.actorRole === 'admin' ? 'bg-amber-500/15 text-amber-600' : 'bg-surface-2 text-muted-foreground'}`}>
+                            {roleLabel(a.actorRole as UserRole)}
                           </span>
                         )}
                         <span className="font-medium">{a.summary ?? `${a.action} ${a.module}`}</span>

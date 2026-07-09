@@ -1,7 +1,8 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingCart, Tag, Users, ShieldCheck, History, LogOut } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, Tag, Users, Store, ShieldCheck, History, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/store/authStore';
+import { isManagerPlus, isSuperAdmin, roleLabel } from '@/lib/roles';
 
 const NAV = [
   { to: '/admin', icon: LayoutDashboard, label: 'Dashboard', end: true },
@@ -11,18 +12,26 @@ const NAV = [
   { to: '/admin/coupons', icon: Tag, label: 'Coupons' },
 ];
 
-// Manager-only modules, appended to the sidebar when the user is a manager.
+// Manager + Super Admin can provision Store Owners.
 const MANAGER_NAV = [
+  { to: '/admin/store-owners', icon: Store, label: 'Store Owners', end: false },
+];
+
+// Super Admin only: manage Managers + the complete activity log.
+const SUPERADMIN_NAV = [
+  { to: '/admin/managers', icon: ShieldCheck, label: 'Managers', end: false },
   { to: '/admin/activity', icon: History, label: 'Activity Log', end: false },
-  { to: '/admin/admins', icon: ShieldCheck, label: 'Admins', end: false },
 ];
 
 export function AdminLayout() {
   const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
   const logout = useAuthStore((s) => s.logout);
-  const isManager = user?.role === 'manager';
-  const nav = isManager ? [...NAV, ...MANAGER_NAV] : NAV;
+  const nav = [
+    ...NAV,
+    ...(isManagerPlus(user?.role) ? MANAGER_NAV : []),
+    ...(isSuperAdmin(user?.role) ? SUPERADMIN_NAV : []),
+  ];
 
   function handleLogout() {
     logout();
@@ -35,7 +44,7 @@ export function AdminLayout() {
         <div className="flex items-center gap-2">
           <span className="text-lg font-bold tracking-tight">Sed_Ecomm</span>
           <span className="rounded-full bg-brand-100 px-2 py-0.5 text-xs font-semibold text-brand-700">
-            {isManager ? 'Manager' : 'Admin'}
+            {roleLabel(user?.role)}
           </span>
         </div>
         <div className="flex items-center gap-3">

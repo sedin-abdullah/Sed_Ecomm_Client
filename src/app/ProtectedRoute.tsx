@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
+import { isStaff } from '@/lib/roles';
 
 export function ProtectedRoute({ children }: { children: ReactNode }) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -17,7 +18,7 @@ export function AdminRoute({ children }: { children: ReactNode }) {
   const user = useAuthStore((state) => state.user);
 
   if (!isAuthenticated) return <Navigate to="/login" replace />;
-  // Manager is a superset of Admin, so both may access the admin area.
-  if (user?.role !== 'admin' && user?.role !== 'manager') return <Navigate to="/" replace />;
+  // Store Owner / Manager / Super Admin all use the back-office area.
+  if (!isStaff(user?.role)) return <Navigate to="/" replace />;
   return <>{children}</>;
 }

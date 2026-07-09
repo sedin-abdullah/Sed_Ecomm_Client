@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/Button';
 import { Card, CardBody } from '@/components/ui/Card';
 import { AuthShell } from '@/features/auth/components/AuthShell';
 import { useToast } from '@/store/toastStore';
+import { isStaff } from '@/lib/roles';
 
 const schema = z.object({
   email: z.string().email(),
@@ -28,9 +29,9 @@ export function LoginPage() {
     login.mutate(values, {
       onSuccess: (data) => {
         toast.success('Welcome back!');
-        // Admins/managers go straight to the dashboard-only experience;
-        // customers return to where they were headed (or the storefront home).
-        if (data.user.role === 'admin' || data.user.role === 'manager') {
+        // Staff go straight to the back-office; customers return to where they
+        // were headed (or the storefront home).
+        if (isStaff(data.user.role)) {
           navigate('/admin', { replace: true });
         } else {
           navigate((location.state as { from?: string })?.from ?? '/', { replace: true });

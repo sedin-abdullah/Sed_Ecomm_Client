@@ -1,4 +1,5 @@
-export type UserRole = 'customer' | 'admin' | 'manager';
+// UI labels: admin = "Store Owner", manager = "Manager", superadmin = "Super Admin".
+export type UserRole = 'customer' | 'admin' | 'manager' | 'superadmin';
 
 export interface Address {
   id: string;

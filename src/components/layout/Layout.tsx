@@ -4,14 +4,15 @@ import { Footer } from './Footer';
 import { MobileBottomNav } from './MobileBottomNav';
 import { PageTransition } from './PageTransition';
 import { useAuthStore } from '@/store/authStore';
+import { isStaff } from '@/lib/roles';
 
 export function Layout() {
   const location = useLocation();
   const role = useAuthStore((s) => s.user?.role);
 
-  // Admins/managers use a dedicated dashboard-only experience — keep them out
-  // of the entire customer storefront (home, products, cart, wishlist…).
-  if (role === 'admin' || role === 'manager') return <Navigate to="/admin" replace />;
+  // Staff (Store Owner / Manager / Super Admin) use the back-office only —
+  // keep them out of the entire customer storefront.
+  if (isStaff(role)) return <Navigate to="/admin" replace />;
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">

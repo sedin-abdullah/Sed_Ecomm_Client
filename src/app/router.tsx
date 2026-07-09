@@ -50,8 +50,10 @@ const AdminCustomersPage = () =>
   import('@/features/admin/pages/AdminCustomersPage').then((m) => ({ default: m.AdminCustomersPage }));
 const AdminCouponsPage = () =>
   import('@/features/admin/pages/AdminCouponsPage').then((m) => ({ default: m.AdminCouponsPage }));
-const AdminManagementPage = () =>
-  import('@/features/admin/pages/AdminManagementPage').then((m) => ({ default: m.AdminManagementPage }));
+const StoreOwnersPage = () =>
+  import('@/features/admin/pages/StaffManagementPage').then((m) => ({ default: m.StoreOwnersPage }));
+const ManagersPage = () =>
+  import('@/features/admin/pages/StaffManagementPage').then((m) => ({ default: m.ManagersPage }));
 const AuditTrailPage = () =>
   import('@/features/admin/pages/AuditTrailPage').then((m) => ({ default: m.AuditTrailPage }));
 
@@ -88,7 +90,8 @@ export const router = createBrowserRouter([
       { path: 'orders', element: lazyPage(AdminOrdersPage) },
       { path: 'customers', element: lazyPage(AdminCustomersPage) },
       { path: 'coupons', element: lazyPage(AdminCouponsPage) },
-      { path: 'admins', element: lazyPage(AdminManagementPage) },
+      { path: 'store-owners', element: lazyPage(StoreOwnersPage) },
+      { path: 'managers', element: lazyPage(ManagersPage) },
       { path: 'activity', element: lazyPage(AuditTrailPage) },
     ],
   },
