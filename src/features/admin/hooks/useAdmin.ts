@@ -40,8 +40,25 @@ export function useAdminProducts() {
   return useQuery({
     queryKey: ['admin', 'products'],
     queryFn: async () => {
-      const res = await apiClient.get<PaginatedResponse<Product>>('/products', { params: { limit: 50 } });
+      // includeInactive so the admin table also shows disabled products.
+      const res = await apiClient.get<PaginatedResponse<Product>>('/products', {
+        params: { limit: 50, includeInactive: true },
+      });
       return res.data.data ?? [];
+    },
+  });
+}
+
+/** Lightweight enable/disable toggle (JSON PATCH, no multipart form). */
+export function useSetProductStatus() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, isActive }: { id: string; isActive: boolean }) => {
+      await apiClient.patch(`/products/${id}`, { isActive });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
+      queryClient.invalidateQueries({ queryKey: ['products'] });
     },
   });
 }

@@ -37,6 +37,7 @@ export interface Product {
   isFlashSale?: boolean;
   isNewArrival?: boolean;
   isBestSeller?: boolean;
+  isActive?: boolean;
   createdAt: string;
   updatedAt: string;
 }

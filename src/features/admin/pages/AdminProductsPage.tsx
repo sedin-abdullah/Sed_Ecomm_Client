@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Pencil, Trash2 } from 'lucide-react';
-import { useAdminProducts, useDeleteProduct, useCreateProduct, useUpdateProduct } from '@/features/admin/hooks/useAdmin';
+import { useAdminProducts, useDeleteProduct, useCreateProduct, useUpdateProduct, useSetProductStatus } from '@/features/admin/hooks/useAdmin';
 import { useCategories } from '@/features/products/hooks/useCategories';
 import { Card, CardBody } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -65,6 +65,7 @@ export function AdminProductsPage() {
   const { data: products, isLoading } = useAdminProducts();
   const { data: categories } = useCategories();
   const deleteProduct = useDeleteProduct();
+  const setProductStatus = useSetProductStatus();
   const createProduct = useCreateProduct();
   const updateProduct = useUpdateProduct();
   const toast = useToast();
@@ -166,12 +167,13 @@ export function AdminProductsPage() {
                 <th className="py-2">Product</th>
                 <th className="py-2">Price</th>
                 <th className="py-2">Stock</th>
+                <th className="py-2">Status</th>
                 <th className="py-2" />
               </tr>
             </thead>
             <tbody>
               {isLoading ? (
-                <tr><td colSpan={4} className="py-6 text-center text-muted-foreground">Loading...</td></tr>
+                <tr><td colSpan={5} className="py-6 text-center text-muted-foreground">Loading...</td></tr>
               ) : (
                 products?.map((p) => (
                   <tr key={p.id} className="border-b border-border last:border-0">
@@ -187,6 +189,15 @@ export function AdminProductsPage() {
                       />
                     </td>
                     <td>{p.stock}</td>
+                    <td>
+                      <button
+                        onClick={() => setProductStatus.mutate({ id: p.id, isActive: p.isActive === false })}
+                        className={p.isActive === false ? 'text-muted-foreground' : 'text-success'}
+                        title={p.isActive === false ? 'Disabled — click to enable' : 'Active — click to disable'}
+                      >
+                        {p.isActive === false ? 'Disabled' : 'Active'}
+                      </button>
+                    </td>
                     <td className="whitespace-nowrap text-right">
                       <button onClick={() => openEdit(p)} className="mr-3 text-muted-foreground hover:text-foreground" aria-label="Edit">
                         <Pencil className="size-4" />
