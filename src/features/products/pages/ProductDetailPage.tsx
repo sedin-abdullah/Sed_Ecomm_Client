@@ -39,6 +39,7 @@ export function ProductDetailPage() {
   const [qty, setQty] = useState(1);
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewComment, setReviewComment] = useState('');
+  const [addToCartError, setAddToCartError] = useState<string | null>(null);
 
   useEffect(() => {
     if (product) addRecentlyViewed(product.id);
@@ -65,8 +66,17 @@ export function ProductDetailPage() {
   const colors = product.variants?.colors ?? [];
 
   function handleAddToCart() {
+    setAddToCartError(null);
     if (!isAuthenticated) {
       toast.info('Log in to add items to your cart');
+      return;
+    }
+    // Admin test toggle: block the add without touching cart state, and show
+    // the error. The backend enforces the same rule as a safety net.
+    if (product!.blockAddToCart) {
+      const message = 'Unable to add this product to cart.';
+      setAddToCartError(message);
+      toast.error(message);
       return;
     }
     addToCart.mutate(
@@ -188,13 +198,18 @@ export function ProductDetailPage() {
           </div>
 
           <div className="mt-6 flex gap-3">
-            <Button size="lg" className="flex-1" disabled={product.stock === 0} isLoading={addToCart.isPending} onClick={handleAddToCart}>
+            <Button size="lg" className="flex-1" data-testid="btn-add-to-cart" disabled={product.stock === 0} isLoading={addToCart.isPending} onClick={handleAddToCart}>
               Add to cart
             </Button>
             <Button size="lg" variant="outline" onClick={handleWishlist} aria-label="Add to wishlist">
               <Heart className="size-5" />
             </Button>
           </div>
+          {addToCartError && (
+            <p data-testid="add-to-cart-error-msg" role="alert" className="mt-3 text-sm text-danger">
+              {addToCartError}
+            </p>
+          )}
         </div>
       </div>
 

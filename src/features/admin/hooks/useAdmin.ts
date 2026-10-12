@@ -94,6 +94,8 @@ export interface ProductFormPayload {
   isFlashSale?: boolean;
   isNewArrival?: boolean;
   isBestSeller?: boolean;
+  blockAddToCart?: boolean;
+  blockCheckout?: boolean;
   imageFiles?: File[];
 }
 

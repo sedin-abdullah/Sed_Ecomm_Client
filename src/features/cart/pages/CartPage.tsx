@@ -42,6 +42,7 @@ export function CartPage() {
   }
   const navigate = useNavigate();
   const [coupon, setCoupon] = useState('');
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
   if (isLoading) {
     return (
@@ -53,6 +54,20 @@ export function CartPage() {
 
   const activeItems = cart?.items.filter((i) => !i.savedForLater) ?? [];
   const savedItems = cart?.items.filter((i) => i.savedForLater) ?? [];
+
+  function handleProceedToCheckout() {
+    setCheckoutError(null);
+    // Admin test toggle: block navigation when any active cart item is flagged.
+    // The backend enforces the same rule on the order API as a safety net.
+    const blocked = activeItems.some((i) => i.product.blockCheckout);
+    if (blocked) {
+      const message = 'Checkout is currently unavailable for one or more items in your cart.';
+      setCheckoutError(message);
+      toast.error(message);
+      return;
+    }
+    navigate('/checkout');
+  }
 
   if (!cart || activeItems.length === 0) {
     return (
@@ -194,9 +209,14 @@ export function CartPage() {
               <PriceTag price={cart.total} />
             </div>
           </div>
-          <Button size="lg" className="w-full" onClick={() => navigate('/checkout')}>
+          <Button size="lg" className="w-full" data-testid="btn-proceed-checkout" onClick={handleProceedToCheckout}>
             Proceed to checkout
           </Button>
+          {checkoutError && (
+            <p data-testid="checkout-error-msg" role="alert" className="mt-3 text-sm text-danger">
+              {checkoutError}
+            </p>
+          )}
         </CardBody>
       </Card>
     </div>

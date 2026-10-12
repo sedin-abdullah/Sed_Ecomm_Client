@@ -30,6 +30,8 @@ interface ProductFormState {
   isFlashSale: boolean;
   isNewArrival: boolean;
   isBestSeller: boolean;
+  blockAddToCart: boolean;
+  blockCheckout: boolean;
 }
 
 const EMPTY_FORM: ProductFormState = {
@@ -47,6 +49,8 @@ const EMPTY_FORM: ProductFormState = {
   isFlashSale: false,
   isNewArrival: false,
   isBestSeller: false,
+  blockAddToCart: false,
+  blockCheckout: false,
 };
 
 type FlagKey = 'isFeatured' | 'isFlashSale' | 'isNewArrival' | 'isBestSeller';
@@ -56,6 +60,25 @@ const FLAGS: { key: FlagKey; label: string }[] = [
   { key: 'isFlashSale', label: 'Flash Sale' },
   { key: 'isNewArrival', label: 'New Arrival' },
   { key: 'isBestSeller', label: 'Best Seller' },
+];
+
+// Admin test toggles for simulating checkout-flow failures. Rendered in their
+// own "Cart & Checkout Controls" section, styled like the Flags pills.
+type ControlKey = 'blockAddToCart' | 'blockCheckout';
+
+const CART_CHECKOUT_CONTROLS: { key: ControlKey; label: string; hint: string; testId: string }[] = [
+  {
+    key: 'blockAddToCart',
+    label: 'Add to Cart',
+    hint: "When ON, customers can't add this product to the cart.",
+    testId: 'toggle-block-add-to-cart',
+  },
+  {
+    key: 'blockCheckout',
+    label: 'Proceed to Checkout',
+    hint: 'When ON, checkout fails if this product is in the cart.',
+    testId: 'toggle-block-checkout',
+  },
 ];
 
 function categoryIdOf(product: Product): string {
@@ -105,12 +128,18 @@ export function AdminProductsPage() {
       isFlashSale: product.isFlashSale ?? false,
       isNewArrival: product.isNewArrival ?? false,
       isBestSeller: product.isBestSeller ?? false,
+      blockAddToCart: product.blockAddToCart ?? false,
+      blockCheckout: product.blockCheckout ?? false,
     });
     setImageFiles([]);
     setOpen(true);
   }
 
   function toggleFlag(key: FlagKey) {
+    setForm((f) => ({ ...f, [key]: !f[key] }));
+  }
+
+  function toggleControl(key: ControlKey) {
     setForm((f) => ({ ...f, [key]: !f[key] }));
   }
 
@@ -130,6 +159,8 @@ export function AdminProductsPage() {
       isFlashSale: form.isFlashSale,
       isNewArrival: form.isNewArrival,
       isBestSeller: form.isBestSeller,
+      blockAddToCart: form.blockAddToCart,
+      blockCheckout: form.blockCheckout,
       imageFiles,
     };
 
@@ -300,6 +331,29 @@ export function AdminProductsPage() {
                 >
                   {label}
                 </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="col-span-2">
+            <p className="mb-2 text-sm font-medium text-foreground">Cart &amp; Checkout Controls</p>
+            <div className="flex flex-col gap-3">
+              {CART_CHECKOUT_CONTROLS.map(({ key, label, hint, testId }) => (
+                <div key={key}>
+                  <button
+                    type="button"
+                    data-testid={testId}
+                    aria-pressed={form[key]}
+                    onClick={() => toggleControl(key)}
+                    className={cn(
+                      'rounded-full border px-3 py-1.5 text-xs font-medium transition-colors',
+                      form[key] ? 'border-brand-500 bg-brand-100 text-brand-700' : 'border-border text-muted-foreground',
+                    )}
+                  >
+                    {label}
+                  </button>
+                  <p className="mt-1 text-xs text-muted-foreground">{hint}</p>
+                </div>
               ))}
             </div>
           </div>
