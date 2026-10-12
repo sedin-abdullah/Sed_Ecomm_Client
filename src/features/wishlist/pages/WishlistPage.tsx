@@ -10,6 +10,7 @@ import { Skeleton } from '@/components/ui/Skeleton';
 import { useAuthStore } from '@/store/authStore';
 import { useToast } from '@/store/toastStore';
 import { handleImageError } from '@/lib/imageFallback';
+import { getApiErrorMessage } from '@/lib/apiError';
 import { useProductI18n } from '@/lib/productI18n';
 
 export function WishlistPage() {
@@ -29,7 +30,9 @@ export function WishlistPage() {
           removeFromWishlist.mutate(productId);
           toast.success('Moved to cart');
         },
-        onError: () => toast.error('Could not add to cart'),
+        // Surface the server's specific reason (e.g. a blocked product) instead
+        // of a generic message.
+        onError: (err) => toast.error(getApiErrorMessage(err, 'Could not add to cart')),
       },
     );
   }

@@ -45,6 +45,12 @@ export function ProductDetailPage() {
     if (product) addRecentlyViewed(product.id);
   }, [product, addRecentlyViewed]);
 
+  // Clear any stale add-to-cart error when switching to a different product,
+  // so a blocked product's message doesn't linger on the next one.
+  useEffect(() => {
+    setAddToCartError(null);
+  }, [product?.id]);
+
   if (isLoading) {
     return (
       <div className="container grid gap-8 py-10 lg:grid-cols-2">

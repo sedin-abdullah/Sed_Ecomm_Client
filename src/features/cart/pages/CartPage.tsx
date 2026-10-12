@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Trash2, BookmarkPlus, Heart } from 'lucide-react';
 import {
@@ -43,6 +43,14 @@ export function CartPage() {
   const navigate = useNavigate();
   const [coupon, setCoupon] = useState('');
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
+
+  // Drop the checkout error once no active cart item blocks checkout anymore
+  // (e.g. the offending item was removed), so it doesn't linger. Kept above the
+  // early returns below to satisfy the Rules of Hooks.
+  useEffect(() => {
+    const stillBlocked = (cart?.items ?? []).some((i) => !i.savedForLater && i.product.blockCheckout);
+    if (!stillBlocked) setCheckoutError(null);
+  }, [cart]);
 
   if (isLoading) {
     return (

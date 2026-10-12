@@ -337,23 +337,39 @@ export function AdminProductsPage() {
 
           <div className="col-span-2">
             <p className="mb-2 text-sm font-medium text-foreground">Cart &amp; Checkout Controls</p>
-            <div className="flex flex-col gap-3">
+            <div className="divide-y divide-border overflow-hidden rounded-xl border border-border">
               {CART_CHECKOUT_CONTROLS.map(({ key, label, hint, testId }) => (
-                <div key={key}>
+                <label
+                  key={key}
+                  htmlFor={testId}
+                  className="flex cursor-pointer items-start justify-between gap-4 p-3"
+                >
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-foreground">{label}</p>
+                    <p className="mt-0.5 text-xs text-muted-foreground">{hint}</p>
+                  </div>
                   <button
+                    id={testId}
                     type="button"
+                    role="switch"
                     data-testid={testId}
-                    aria-pressed={form[key]}
+                    aria-checked={form[key]}
+                    aria-label={label}
                     onClick={() => toggleControl(key)}
                     className={cn(
-                      'rounded-full border px-3 py-1.5 text-xs font-medium transition-colors',
-                      form[key] ? 'border-brand-500 bg-brand-100 text-brand-700' : 'border-border text-muted-foreground',
+                      'relative mt-0.5 inline-flex h-6 w-11 shrink-0 items-center rounded-full border transition-colors',
+                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface',
+                      form[key] ? 'border-brand-500 bg-brand-gradient' : 'border-border bg-surface-2',
                     )}
                   >
-                    {label}
+                    <span
+                      className={cn(
+                        'inline-block size-5 transform rounded-full bg-white shadow-soft transition-transform',
+                        form[key] ? 'translate-x-5' : 'translate-x-0.5',
+                      )}
+                    />
                   </button>
-                  <p className="mt-1 text-xs text-muted-foreground">{hint}</p>
-                </div>
+                </label>
               ))}
             </div>
           </div>
